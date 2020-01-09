@@ -1,4 +1,6 @@
-namespace Izopropylen.Data
+using System.Collections.Generic;
+
+namespace Izopropylen.Data.Entity
 {
     public class Account
     {
@@ -7,5 +9,7 @@ namespace Izopropylen.Data
         public string Username { get; set; }
 
         public string PasswordHash { get; set; }
+
+        public List<AccountProject> Projects { get; set; }
     }
 }

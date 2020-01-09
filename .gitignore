@@ -11,6 +11,8 @@ nupkg/
 # Rider
 .idea
 *.db
+*.db-shm
+*.db-wal
 # User-specific files
 *.suo
 *.user
