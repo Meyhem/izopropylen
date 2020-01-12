@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Izopropylen.Data.Migrations
 {
-    [DbContext(typeof(IzopropylenDbContext))]
+    [DbContext(typeof(IzoDbContext))]
     partial class IzopropylenDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -29,6 +29,9 @@ namespace Izopropylen.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Accounts");
                 });
 
@@ -47,7 +50,7 @@ namespace Izopropylen.Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("AccountProject");
+                    b.ToTable("AccountProjects");
                 });
 
             modelBuilder.Entity("Izopropylen.Data.Entity.Project", b =>
@@ -61,7 +64,48 @@ namespace Izopropylen.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Project");
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Izopropylen.Data.Entity.TranslationKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CultureCode")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("TranslationKey");
+                });
+
+            modelBuilder.Entity("Izopropylen.Data.Entity.TranslationValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TranslationKeyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TranslationKeyId");
+
+                    b.ToTable("TranslationValue");
                 });
 
             modelBuilder.Entity("Izopropylen.Data.Entity.AccountProject", b =>
@@ -75,6 +119,24 @@ namespace Izopropylen.Data.Migrations
                     b.HasOne("Izopropylen.Data.Entity.Project", "Project")
                         .WithMany("Collaborators")
                         .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Izopropylen.Data.Entity.TranslationKey", b =>
+                {
+                    b.HasOne("Izopropylen.Data.Entity.Project", "Project")
+                        .WithMany("TranslationKeys")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Izopropylen.Data.Entity.TranslationValue", b =>
+                {
+                    b.HasOne("Izopropylen.Data.Entity.TranslationKey", "TranslationKey")
+                        .WithMany("Values")
+                        .HasForeignKey("TranslationKeyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

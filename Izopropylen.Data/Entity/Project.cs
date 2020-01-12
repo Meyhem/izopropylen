@@ -9,5 +9,7 @@ namespace Izopropylen.Data.Entity
         public string Name { get; set; }
 
         public List<AccountProject> Collaborators { get; set; }
+
+        public List<TranslationKey> TranslationKeys { get; set; }
     }
 }

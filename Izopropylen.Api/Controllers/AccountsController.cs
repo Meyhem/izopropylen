@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Izopropylen.Api.Models.Input.Output;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Izopropylen.Api.Controllers
 {
@@ -11,8 +7,9 @@ namespace Izopropylen.Api.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        public string Get() {
-            return "Yep";
+        [Route("token")]
+        public IssueTokenModel Token(IssueTokenModel model) {
+            return model;
         }
     }
 }

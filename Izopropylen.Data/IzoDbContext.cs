@@ -4,15 +4,17 @@ using Microsoft.Extensions.Configuration;
 
 namespace Izopropylen.Data
 {
-    public class IzopropylenDbContext : DbContext
+    public class IzoDbContext : DbContext
     {
         private IConfiguration configuration;
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountProject> AccountProjects { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<TranslationKey> TranslationKeys { get; set; }
+        public DbSet<TranslationValue> TranslationValues { get; set; }
 
-        public IzopropylenDbContext(DbContextOptions<IzopropylenDbContext> opts, IConfiguration configuration)
+        public IzoDbContext(DbContextOptions<IzoDbContext> opts, IConfiguration configuration)
             : base(opts)
         {
             this.configuration = configuration;

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Izopropylen.Data.Entity
 {
     public enum ProjectAccountRole

@@ -1,7 +1,8 @@
 using Izopropylen.Data;
+using Izopropylen.Data.Entity;
+using Izopropylen.Data.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,14 +18,17 @@ namespace Izopropylen.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<IzopropylenDbContext>();
+            services.AddDbContext<IzoDbContext>();
+            services.AddTransient<IRepository<Account>, IzoRepository<Account>>();
+            services.AddTransient<IRepository<AccountProject>, IzoRepository<AccountProject>>();
+            services.AddTransient<IRepository<Project>, IzoRepository<Project>>();
+            services.AddTransient<IRepository<TranslationKey>, IzoRepository<TranslationKey>>();
+            services.AddTransient<IRepository<TranslationValue>, IzoRepository<TranslationValue>>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
