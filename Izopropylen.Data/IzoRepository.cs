@@ -20,9 +20,9 @@ namespace Izopropylen.Data
             return await db.FindAsync<T>(id);
         }
 
-        public IDbQueryable<T> Query()
+        public DbSet<T> Query()
         {
-            return (IDbQueryable<T>)db.Set<T>();
+            return db.Set<T>();
         }
 
         public async Task Create(T ent)

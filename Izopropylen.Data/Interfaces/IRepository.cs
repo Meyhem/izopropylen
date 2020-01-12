@@ -9,7 +9,7 @@ namespace Izopropylen.Data.Interfaces
     {
         Task<T> FindOne(object id);
 
-        IDbQueryable<T> Query();
+        DbSet<T> Query();
 
         Task Create(T ent);
 

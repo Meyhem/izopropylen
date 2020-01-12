@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Izopropylen.Api.Models.Input.Output
+namespace Izopropylen.Api.Models.Input
 {
     public class IssueTokenModel
     {
