@@ -13,10 +13,13 @@ namespace Izopropylen.Core.Services
     public class ProjectService: IProjectService
     {
         private readonly IRepository<Project> projectRepo;
+        private readonly IAccountService accountService;
 
-        public ProjectService(IRepository<Project> projectRepo)
+        public ProjectService(IRepository<Project> projectRepo,
+            IAccountService accountService)
         {
             this.projectRepo = projectRepo;
+            this.accountService = accountService;
         }
 
         public async Task<IEnumerable<ProjectMembershipDto>>
@@ -32,6 +35,24 @@ namespace Izopropylen.Core.Services
                     Role = p.Collaborators.First(c => c.AccountId == accountId).ProjectAccountRole
                 })
                 .ToListAsync();
+        }
+
+        public async Task<int> CreateProject(int accountId, string name)
+        {
+            var acc = await accountService.GetAccount(accountId);
+            var newProject = new Project
+            {
+                Name = name
+            };
+            newProject.Collaborators.Add(new AccountProject
+            {
+                Account = acc,
+                ProjectAccountRole = ProjectAccountRole.Admin
+            });
+
+            await projectRepo.Create(newProject);
+
+            return newProject.Id;
         }
     }
 }
