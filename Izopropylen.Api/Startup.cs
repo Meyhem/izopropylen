@@ -1,4 +1,6 @@
+using System.Reflection;
 using System.Text;
+using AutoMapper;
 using Izopropylen.Api.Extensions;
 using Izopropylen.Api.Filters;
 using Izopropylen.Core.Interfaces;
@@ -34,15 +36,18 @@ namespace Izopropylen.Api
             {
                 c.Filters.Add(typeof(ApiExceptionFilterAttribute));
             });
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddDbContext<IzoDbContext>();
             services.AddTransient<IRepository<Account>, IzoRepository<Account>>();
             services.AddTransient<IRepository<AccountProject>, IzoRepository<AccountProject>>();
             services.AddTransient<IRepository<Project>, IzoRepository<Project>>();
             services.AddTransient<IRepository<TranslationKey>, IzoRepository<TranslationKey>>();
             services.AddTransient<IRepository<TranslationValue>, IzoRepository<TranslationValue>>();
-            services.AddSingleton<ApplicationSettings>(r => settings);
+            services.AddSingleton(r => settings);
 
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IProjectService, ProjectService>();
 
             services.AddAuthentication(a =>
             {

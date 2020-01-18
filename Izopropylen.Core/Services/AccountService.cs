@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +37,18 @@ namespace Izopropylen.Core.Services
             await accRepo.Create(newAcc);
 
             return newAcc.Id;
+        }
+
+        public async Task<Account> GetAccount(int id)
+        {
+            var account = await accRepo.FindOne(id);
+
+            if (account == null)
+            {
+                throw new IzoConflictException("No such account");
+            }
+
+            return account;
         }
 
         public async Task<Account> AutheticateUser(string username, string password)
@@ -79,11 +90,9 @@ namespace Izopropylen.Core.Services
         private string GenSalt()
         {
             byte[] randomBytes = new byte[128 / 8];
-            using (var generator = RandomNumberGenerator.Create())
-            {
-                generator.GetBytes(randomBytes);
-                return Convert.ToBase64String(randomBytes);
-            }
+            using var generator = RandomNumberGenerator.Create();
+            generator.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
         }
 
         private string DeriveKey(string password, string salt)

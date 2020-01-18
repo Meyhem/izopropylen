@@ -2,7 +2,7 @@ using System;
 
 namespace Izopropylen.Api.Models.Output
 {
-    public class AccountsJwtToken
+    public class AccountsJwtTokenModel
     {
         public string Token { get; set; }
 

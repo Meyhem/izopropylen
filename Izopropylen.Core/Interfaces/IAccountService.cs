@@ -7,5 +7,6 @@ namespace Izopropylen.Core.Interfaces
     {
         Task<int> AddAccount(string username, string passwordHash);
         Task<Account> AutheticateUser(string username, string password);
+        Task<Account> GetAccount(int id);
     }
 }
