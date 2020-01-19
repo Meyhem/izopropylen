@@ -43,6 +43,10 @@ namespace Izopropylen.Data
 
             modelBuilder.Entity<AccountProject>()
                 .HasKey(ap => new { ap.AccountId, ap.ProjectId });
+
+            modelBuilder.Entity<TranslationValue>()
+                .HasIndex(i => new { i.TranslationKeyId, i.CultureCode })
+                .IsUnique();
         }
     }
 }

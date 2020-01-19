@@ -67,10 +67,10 @@ namespace Izopropylen.Api.Controllers
         public async Task<IEnumerable<TranslationKeyModel>> GetKeys(int id)
         {
             await securityService.ThrowIfNoAccessToProjectWithMinimalRole(
-                            HttpContext.User.GetId(),
-                            id,
-                            ProjectAccountRole.Viewer
-                        );
+                HttpContext.User.GetId(),
+                id,
+                ProjectAccountRole.Viewer
+            );
 
             var keys = await translationService.GetProjectKeys(id);
 

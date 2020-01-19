@@ -21,6 +21,7 @@ namespace Izopropylen.Api.Models
                     o => o.MapFrom(cd => cd.Role.ToString())
                 );
             CreateMap<TranslationKeyDto, TranslationKeyModel>();
+            CreateMap<TranslationValueDto, TranslationValueModel>();
         }
     }
 }

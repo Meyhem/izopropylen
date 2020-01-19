@@ -12,10 +12,13 @@ namespace Izopropylen.Core.Services
     public class SecurityService: ISecurityService
     {
         private readonly IRepository<AccountProject> accountProjectRepository;
+        private readonly IRepository<TranslationKey> translationKeyRepository;
 
-        public SecurityService(IRepository<AccountProject> accountProjectRepository)
+        public SecurityService(IRepository<AccountProject> accountProjectRepository,
+            IRepository<TranslationKey> translationKeyRepository)
         {
             this.accountProjectRepository = accountProjectRepository;
+            this.translationKeyRepository = translationKeyRepository;
         }
 
         public async Task<bool> HasAccessToProjectWithMinimalRole(
@@ -30,6 +33,35 @@ namespace Izopropylen.Core.Services
                     ap.ProjectId == projectId);
 
             return HasMinimalRole(ap, role);
+        }
+
+        public async Task<bool> HasAccessToTranslationWithMinimalRole(
+            int accountId,
+            int translationKeyId,
+            ProjectAccountRole role)
+        {
+            var ap = await accountProjectRepository
+                .Query()
+                .SingleOrDefaultAsync(ap =>
+                    ap.AccountId == accountId &&
+                    ap.Project
+                        .TranslationKeys
+                        .Any(tk => tk.Id == translationKeyId));
+
+
+            return HasMinimalRole(ap, role);
+        }
+
+        public async Task ThrowIfNoAccessToTranslationWithMinimalRole(int accountId,
+            int translationKeyId,
+            ProjectAccountRole role)
+        {
+            if (!await HasAccessToTranslationWithMinimalRole(accountId, translationKeyId, role))
+            {
+                throw new IzoNoAccessException(
+                    $"Account={accountId} cannot access translation key={translationKeyId} with role {role}"
+                );
+            }
         }
 
         public async Task ThrowIfNoAccessToProjectWithMinimalRole(int accountId,

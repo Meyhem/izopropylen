@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Izopropylen.Core.Dto;
@@ -13,10 +14,13 @@ namespace Izopropylen.Core.Services
     public class TranslationService: ITranslationService
     {
         private readonly IRepository<TranslationKey> keyRepository;
+        private readonly IRepository<TranslationValue> valueRepository;
 
-        public TranslationService(IRepository<TranslationKey> keyRepository)
+        public TranslationService(IRepository<TranslationKey> keyRepository,
+            IRepository<TranslationValue> valueRepository)
         {
             this.keyRepository = keyRepository;
+            this.valueRepository = valueRepository;
         }
 
         public async Task<IEnumerable<TranslationKeyDto>> GetProjectKeys(int projectId)
@@ -52,6 +56,48 @@ namespace Izopropylen.Core.Services
             await keyRepository.Create(newKey);
 
             return newKey.Id;
+        }
+
+        public async Task UpsertValue(int keyId, CultureInfo cultureInfo, string value)
+        {
+            var cc = cultureInfo.TextInfo.CultureName;
+            var tv = await valueRepository
+                .Query()
+                .SingleOrDefaultAsync(v =>
+                    v.TranslationKeyId == keyId &&
+                    v.CultureCode == cc);
+
+            if (tv == null)
+            {
+                tv = new TranslationValue
+                {
+                    TranslationKeyId = keyId,
+                    CultureCode = cc
+                };
+
+                await valueRepository.Create(tv);
+            }
+
+            tv.Value = value;
+
+            await valueRepository.Update(tv);
+        }
+
+        public async Task<IEnumerable<TranslationValueDto>> GetValues(int translationKeyId)
+        {
+            return await valueRepository.Query()
+                .Where(v => v.TranslationKeyId == translationKeyId)
+                .Select(v => new TranslationValueDto
+                {
+                    TranslationKeyId = v.TranslationKeyId,
+
+                    TranslationValueId = v.Id,
+
+                    CultureCode = v.CultureCode,
+
+                    Value = v.Value
+                })
+                .ToListAsync();
         }
     }
 }
