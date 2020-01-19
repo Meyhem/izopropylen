@@ -15,6 +15,12 @@ namespace Izopropylen.Api.Models
                     pmm => pmm.Role,
                     o => o.MapFrom(pmd => pmd.Role.ToString())
                 );
+            CreateMap<CollaboratorDto, CollaboratorModel>()
+                .ForMember(
+                    cm => cm.Role,
+                    o => o.MapFrom(cd => cd.Role.ToString())
+                );
+            CreateMap<TranslationKeyDto, TranslationKeyModel>();
         }
     }
 }

@@ -1,13 +1,15 @@
 using System.Collections.Generic;
-using Izopropylen.Data.Interfaces;
 
 namespace Izopropylen.Data.Entity
 {
     public class TranslationKey
     {
-        public int Id { get; set; }
+        public TranslationKey()
+        {
+            Values = new List<TranslationValue>();
+        }
 
-        public string CultureCode { get; set; }
+        public int Id { get; set; }
 
         public string Key { get; set; }
 

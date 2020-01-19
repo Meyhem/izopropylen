@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using Izopropylen.Data.Entity;
 
 namespace Izopropylen.Core.Dto

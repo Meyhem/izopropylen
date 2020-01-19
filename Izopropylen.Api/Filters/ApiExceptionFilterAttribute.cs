@@ -21,14 +21,17 @@ namespace Izopropylen.Api.Filters
 
             switch(ex)
             {
-                case IzoConflictException cfl:
+                case IzoConflictException _:
                     code = 409;
                     break;
-                case IzoNotFoundException cfl:
+                case IzoNotFoundException _:
                     code = 404;
                     break;
-
-                default: break;
+                case IzoNoAccessException _:
+                    code = 401;
+                    break;
+                default:
+                    break;
             }
 
             context.HttpContext.Response.StatusCode = code;

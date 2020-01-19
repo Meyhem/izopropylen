@@ -19,7 +19,9 @@ namespace Izopropylen.Core.Services
             this.accRepo = accRepo;
         }
 
-        public async Task<int> AddAccount(string username, string password)
+        public async Task<int> AddAccount(string username,
+            string password,
+            string displayname)
         {
             var existing = await accRepo.Query()
                 .SingleOrDefaultAsync(acc => acc.Username == username);
@@ -31,6 +33,7 @@ namespace Izopropylen.Core.Services
             var newAcc = new Account
             {
                 Username = username,
+                Displayname = displayname,
                 PasswordHash = DeriveKey(password, GenSalt())
             };
 

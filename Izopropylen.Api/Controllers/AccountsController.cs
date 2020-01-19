@@ -66,7 +66,9 @@ namespace Izopropylen.Api.Controllers
         [HttpPost]
         public async Task<int> Create(CreateAccountModel model)
         {
-            return await accService.AddAccount(model.Username, model.Password);
+            return await accService.AddAccount(model.Username,
+                model.Password,
+                model.Displayname);
         }
 
         [HttpGet("me")]
@@ -76,8 +78,5 @@ namespace Izopropylen.Api.Controllers
             var acc = await accService.GetAccount(HttpContext.User.GetId());
             return mapper.Map<AccountModel>(acc);
         }
-
-
-
     }
 }

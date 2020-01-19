@@ -19,4 +19,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\IzopropylenDbContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\20200112110018_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200112110018_Init.cs" />
+  </ItemGroup>
 </Project>

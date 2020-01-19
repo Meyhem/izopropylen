@@ -48,6 +48,8 @@ namespace Izopropylen.Api
 
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<ISecurityService, SecurityService>();
+            services.AddTransient<ITranslationService, TranslationService>();
 
             services.AddAuthentication(a =>
             {
