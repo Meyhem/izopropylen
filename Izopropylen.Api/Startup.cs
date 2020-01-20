@@ -10,6 +10,7 @@ using Izopropylen.Data.Entity;
 using Izopropylen.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,15 @@ namespace Izopropylen.Api
             {
                 c.Filters.Add(typeof(ApiExceptionFilterAttribute));
             });
+
+            services.AddCors(o =>
+                o.AddDefaultPolicy(b =>
+                    b.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .SetIsOriginAllowed(_ => true)
+                        .AllowCredentials()
+                )
+            );
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddDbContext<IzoDbContext>();
@@ -76,7 +86,7 @@ namespace Izopropylen.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors();
             app.UseRouting();
 
             app.UseAuthentication();

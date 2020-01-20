@@ -1,10 +1,10 @@
-import { LoginState } from './login-reducer';
+import { AccountState } from './login-reducer';
 import { ActionReducer } from '@ngrx/store';
 
 export * from './login-reducer';
 
 export interface State {
-    login: LoginState;
+    account: AccountState;
 }
 
 export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
