@@ -10,12 +10,12 @@ using Izopropylen.Data.Entity;
 using Izopropylen.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Izopropylen.Api
 {
@@ -33,6 +33,14 @@ namespace Izopropylen.Api
             var settings = Configuration.GetSettings();
             settings.ValidateAndFallback();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Izopropylen API",
+                    Version = "V1"
+                });
+            });
             services.AddControllers(c =>
             {
                 c.Filters.Add(typeof(ApiExceptionFilterAttribute));
@@ -46,7 +54,6 @@ namespace Izopropylen.Api
                         .AllowCredentials()
                 )
             );
-
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddDbContext<IzoDbContext>();
             services.AddTransient<IRepository<Account>, IzoRepository<Account>>();
@@ -88,7 +95,11 @@ namespace Izopropylen.Api
             }
             app.UseCors();
             app.UseRouting();
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Izopropylen API v1");
+            });
             app.UseAuthentication();
             app.UseAuthorization();
 
