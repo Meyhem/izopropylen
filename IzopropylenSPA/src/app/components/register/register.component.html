@@ -1,0 +1,39 @@
+<div class="p-grid p-justify-around">
+    <p-panel class="p-col-5">
+        <p-header>Create Izopropylen account</p-header>
+
+        <div class="content">
+            <form [formGroup]="registerForm">
+                <div class="p-grid">
+                    <div class="p-col-12 ui-fluid">
+                        <input pInputText type="text" placeholder="Username" formControlName="username" />
+                    </div>
+
+                    <div class="p-col-12 ui-fluid">
+                        <input pInputText type="text" placeholder="Display name" formControlName="displayName" />
+                    </div>
+
+                    <div class="p-col-12 ui-fluid">
+                        <input pInputText type="password" placeholder="Password" autocomplete="new-password" formControlName="password" />
+                    </div>
+
+                    <div class="p-col-12 ui-fluid">
+                        <input pInputText type="password" placeholder="Confirm password" autocomplete="new-password" formControlName="passwordAgain" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <p-footer>
+            <div class="p-grid">
+                <div class="p-col ui-fluid">
+                    <a routerLink='/login' pButton class="ui-button-secondary" label="Back to login"></a>
+                </div>
+                <div class="p-col"></div>
+                <div class="p-col ui-fluid">
+                    <button pButton (click)="register()" label="Register" [disabled]="registerForm.valid"></button>
+                </div>
+            </div>
+        </p-footer>
+    </p-panel>
+</div>
