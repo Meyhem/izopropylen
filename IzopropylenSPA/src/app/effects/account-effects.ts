@@ -2,17 +2,19 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { catchError, switchMap, map, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { AccountService } from '../services/account.service';
 import { Login, Register } from '../actions';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountEffects {
   constructor(private actions$: Actions,
-              private accountService: AccountService) { }
+              private accountService: AccountService,
+              private router: Router) { }
 
   authenticate$ = createEffect(() =>
     this.actions$.pipe(
@@ -32,8 +34,13 @@ export class AccountEffects {
       ofType(Register.begin),
       switchMap(a => this.accountService
         .register(a.username, a.displayName, a.password)
-        .pipe<Action, Action>(
+        .pipe(
           map(() => Register.success()),
+          tap(() => {
+            if (a.successRedirect) {
+              this.router.navigate([a.successRedirect]);
+            }
+          }),
           catchError(err => of(Register.error({err})))
         )
       )

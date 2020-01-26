@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { State, selectAccountError } from 'src/app/reducers';
 import { Register } from 'src/app/actions';
 import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AccountEffects } from 'src/app/effects/account-effects';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.sass']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
+  destroyed$ = new Subject();
   accountError$: Observable<HttpErrorResponse>;
 
   registerForm = new FormGroup({
@@ -23,11 +26,13 @@ export class RegisterComponent implements OnInit {
   }, this.validatePasswords);
 
   constructor(private store: Store<State>,
-              private messageService: MessageService) { }
+              private messageService: MessageService,
+              private accountEffects: AccountEffects) { }
 
   ngOnInit() {
     this.accountError$ = this.store
-      .select(selectAccountError);
+      .select(selectAccountError)
+      .pipe(takeUntil(this.destroyed$));;
 
     this.accountError$.subscribe(e => {
       if (!e) {
@@ -39,6 +44,11 @@ export class RegisterComponent implements OnInit {
         detail: e && e.error.message || e.message
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   validatePasswords(grp: FormGroup) {
@@ -64,7 +74,8 @@ export class RegisterComponent implements OnInit {
     this.store.dispatch(Register.begin({
       username: form.username,
       password: form.password,
-      displayName: form.displayName
+      displayName: form.displayName,
+      successRedirect: 'login'
     }));
   }
 }

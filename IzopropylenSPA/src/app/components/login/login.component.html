@@ -1,19 +1,19 @@
 <div class="p-grid p-justify-around">
     <p-panel>
         <p-header>Izopropylen login</p-header>
+        <form [formGroup]="form">
+            <div class="content">
+                <div class="p-grid ui-fluid">
+                    <div class="p-col-12 ui-fluid">
+                        <input pInputText type="text" placeholder="Username" formControlName="username" />
+                    </div>
 
-        <div class="content">
-
-            <div class="p-grid ui-fluid">
-                <div class="p-col-12 ui-fluid">
-                    <input pInputText type="text" placeholder="Username" />
-                </div>
-
-                <div class="p-col-12 ui-fluid">
-                    <input pInputText type="password" placeholder="Password" />
+                    <div class="p-col-12 ui-fluid">
+                        <input pInputText type="password" placeholder="Password" formControlName="password" />
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <p-footer>
             <div class="p-grid">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="p-col"></div>
                 <div class="p-col ui-fluid">
-                    <button pButton label="Log in"></button>
+                    <button pButton label="Log in" (click)="login()" [disabled]="!form.valid"></button>
                 </div>
             </div>
         </p-footer>

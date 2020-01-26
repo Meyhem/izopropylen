@@ -3,22 +3,22 @@
         <p-header>Create Izopropylen account</p-header>
 
         <div class="content">
-            <form [formGroup]="registerForm">
+            <form [formGroup]="registerForm" autocomplete="off">
                 <div class="p-grid">
                     <div class="p-col-12 ui-fluid">
-                        <input pInputText type="text" placeholder="Username" formControlName="username" />
+                        <input pInputText type="text" placeholder="Username" formControlName="username" autocomplete="off" />
                     </div>
 
                     <div class="p-col-12 ui-fluid">
-                        <input pInputText type="text" placeholder="Display name" formControlName="displayName" />
+                        <input pInputText type="text" placeholder="Display name" formControlName="displayName" autocomplete="nickname" />
                     </div>
 
                     <div class="p-col-12 ui-fluid">
-                        <input pInputText type="password" placeholder="Password" autocomplete="new-password" formControlName="password" />
+                        <input pInputText type="password" placeholder="Password" formControlName="password" autocomplete="new-password" />
                     </div>
 
                     <div class="p-col-12 ui-fluid">
-                        <input pInputText type="password" placeholder="Confirm password" autocomplete="new-password" formControlName="passwordAgain" />
+                        <input pInputText type="password" placeholder="Confirm password" formControlName="passwordAgain" autocomplete="new-password" />
                     </div>
                 </div>
             </form>

@@ -4,14 +4,12 @@ using Izopropylen.Api.Models.Input;
 using Izopropylen.Core.Interfaces;
 using Izopropylen.Api.Filters;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Configuration;
 using Izopropylen.Api.Extensions;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
 using Izopropylen.Api.Models.Output;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 

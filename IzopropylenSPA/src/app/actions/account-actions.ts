@@ -10,7 +10,7 @@ export const Login = {
 };
 
 export const Register = {
-    begin: createAction('[Register] begin', props<{username: string, displayName: string, password: string}>()),
+    begin: createAction('[Register] begin', props<{username: string, displayName: string, password: string, successRedirect?: string}>()),
     success: createAction('[Register] success'),
     error: createAction('[Register] error', props<{err: HttpErrorResponse}>())
 };
