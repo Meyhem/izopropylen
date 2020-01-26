@@ -22,6 +22,21 @@
                     </div>
                 </div>
             </form>
+            <div *ngIf="fields.username.touched && fields.username.hasError('required')">
+                <p-message severity="error" text="Username is required"></p-message>
+            </div>
+            <div *ngIf="fields.displayName.touched && fields.displayName.hasError('required')">
+                <p-message severity="error" text="Display name is required"></p-message>
+            </div>
+            <div *ngIf="fields.password.touched && fields.password.hasError('required')">
+                <p-message severity="error" text="Password is required"></p-message>
+            </div>
+            <div *ngIf="fields.passwordAgain.touched && fields.passwordAgain.hasError('required')">
+                <p-message severity="error" text="Password confirmation is required"></p-message>
+            </div>
+            <div *ngIf="fields.passwordAgain.touched && registerForm.hasError('passwordsMatch')">
+                <p-message severity="error" text="Passwords do not match"></p-message>
+            </div>
         </div>
 
         <p-footer>
@@ -31,7 +46,7 @@
                 </div>
                 <div class="p-col"></div>
                 <div class="p-col ui-fluid">
-                    <button pButton (click)="register()" label="Register" [disabled]="registerForm.valid"></button>
+                    <button pButton (click)="register()" label="Register"></button>
                 </div>
             </div>
         </p-footer>
