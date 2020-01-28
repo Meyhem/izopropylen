@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
-import { catchError, switchMap, map, tap } from 'rxjs/operators';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, switchMap, map, tap, throttleTime, mergeMap } from 'rxjs/operators';
 
 import { AccountService } from '../services/account.service';
-import { Login, Register } from '../actions';
-import { Router } from '@angular/router';
+import { Login, Register, StoreToken } from '../actions';
+import { UtilService } from '../services/util.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 export class AccountEffects {
   constructor(private actions$: Actions,
               private accountService: AccountService,
+              private utilService: UtilService,
               private router: Router) { }
 
   authenticate$ = createEffect(() =>
@@ -21,8 +22,17 @@ export class AccountEffects {
       ofType(Login.begin),
       switchMap(a => this.accountService
         .authenticate(a.username, a.password)
-        .pipe<Action, Action>(
-          map(t => Login.success({token: t.token, expires: new Date(t.expires)})),
+        .pipe(
+          throttleTime(1000),
+          switchMap(t => [
+            Login.success(),
+            StoreToken({token: t.token, expires: new Date(t.expires)})
+          ]),
+          tap(() => {
+            if (typeof a.successRedirect !== 'undefined') {
+              this.router.navigate(['']);
+            }
+          }),
           catchError(err => of(Login.error({err})))
         )
       )
@@ -37,7 +47,7 @@ export class AccountEffects {
         .pipe(
           map(() => Register.success()),
           tap(() => {
-            if (a.successRedirect) {
+            if (typeof a.successRedirect !== 'undefined') {
               this.router.navigate([a.successRedirect]);
             }
           }),
@@ -45,5 +55,12 @@ export class AccountEffects {
         )
       )
     )
+  );
+
+  storeToken$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(StoreToken),
+      tap(t => this.utilService.storeToken(t))
+    ), { dispatch: false }
   );
 }

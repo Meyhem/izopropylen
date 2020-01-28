@@ -1,7 +1,7 @@
 <div class="p-grid p-justify-around">
     <p-panel>
         <p-header>Izopropylen login</p-header>
-        <form [formGroup]="form">
+        <form id="loginform" [formGroup]="form">
             <div class="content">
                 <div class="p-grid ui-fluid">
                     <div class="p-col-12 ui-fluid">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="p-col"></div>
                 <div class="p-col ui-fluid">
-                    <button pButton label="Log in" (click)="login()" [disabled]="!form.valid"></button>
+                    <button pButton label="Log in" form="loginform" (click)="login()" [disabled]="!form.valid"></button>
                 </div>
             </div>
         </p-footer>

@@ -3,9 +3,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthenticationToken } from '../models/authentication-token';
 
+export const StoreToken = createAction('[StoreToken]', props<AuthenticationToken>());
+
 export const Login = {
-    begin: createAction('[Login] begin', props<{username: string, password: string}>()),
-    success: createAction('[Login] success', props<AuthenticationToken>()),
+    begin: createAction('[Login] begin', props<{username: string, password: string, successRedirect?: string}>()),
+    success: createAction('[Login] success'),
     error: createAction('[Login] error', props<{err: HttpErrorResponse}>())
 };
 

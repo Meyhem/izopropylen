@@ -1,6 +1,6 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Login, Register } from '../actions';
+import { Login, Register, StoreToken } from '../actions';
 import { AuthenticationToken } from '../models/authentication-token';
 
 export interface AccountState {
@@ -14,7 +14,8 @@ const init = {
 };
 
 const reducer = createReducer<AccountState>(init,
-    on(Login.success, (s, p) => ({...s, token: p, error: null})),
+    on(Login.success, (s) => ({...s, error: null})),
+    on(StoreToken, (s, p) => ({...s, token: p})),
     on(Login.error, (s, p) => ({...s, token: null, error: p.err})),
 
     on(Register.success, (s, p) => ({...s, error: null})),
