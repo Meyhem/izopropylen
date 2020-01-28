@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-import { AuthenticationToken } from '../models/authentication-token';
-
 @Injectable({
   providedIn: 'root'
 })

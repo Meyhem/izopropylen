@@ -1,7 +1,11 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Login, Register, StoreToken } from '../actions';
-import { AuthenticationToken } from '../models/authentication-token';
+
+export interface AuthenticationToken {
+    token: string;
+    expires: Date;
+}
 
 export interface AccountState {
     token: AuthenticationToken | null;

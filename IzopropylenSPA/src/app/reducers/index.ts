@@ -1,10 +1,13 @@
 import { AccountState } from './account-reducer';
 import { ActionReducer } from '@ngrx/store';
+import { ProjectState } from './project-reducer';
 
 export * from './account-reducer';
+export * from './project-reducer';
 
 export interface State {
     account: AccountState;
+    project: ProjectState;
 }
 
 export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
@@ -21,6 +24,7 @@ export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
     };
 }
 
-export const selectAccountError = (s: State) => s.account.error;
+export const selectAccountError = () => (s: State) => s.account.error;
+export const selectAccountToken = () => (s: State) => s.account.token;
 
-export const selectAccountToken = (s: State) => s.account.token;
+export const selectProjectMemberships = () => (s: State) => s.project.memberships;

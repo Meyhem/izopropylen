@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { AuthenticationToken } from '../models/authentication-token';
+import { AuthenticationToken } from '../reducers';
 
 export const StoreToken = createAction('[StoreToken]', props<AuthenticationToken>());
 
@@ -16,8 +15,3 @@ export const Register = {
     success: createAction('[Register] success'),
     error: createAction('[Register] error', props<{err: HttpErrorResponse}>())
 };
-
-// export const setToken = createAction(
-//     '[LOGIN] login',
-//     props<{token: string}>()
-// );

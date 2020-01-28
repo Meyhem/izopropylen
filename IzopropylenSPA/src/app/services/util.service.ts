@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthenticationToken } from '../models/authentication-token';
+import { AuthenticationToken } from '../reducers';
 
 @Injectable({
     providedIn: 'root'

@@ -13,10 +13,11 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { SidebarModule } from 'primeng/sidebar';
 import { MenubarModule } from 'primeng/menubar';
+import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './routing.module';
-import { State, accountReducer, debug } from './reducers';
+import { State, accountReducer, debug, projectReducer } from './reducers';
 import { RootComponent } from './components/root/root.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -27,6 +28,7 @@ import { AccountEffects } from './effects/account-effects';
 import { AccountService } from './services/account.service';
 import { AuthGuardService } from './services/auth.guard';
 import { UtilService } from './services/util.service';
+import { ProjectEffects } from './effects/project-effects';
 
 const utilService = new UtilService();
 
@@ -44,14 +46,17 @@ const utilService = new UtilService();
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    StoreModule.forRoot<State>({
-      account: accountReducer
-    },
+    StoreModule.forRoot<State>(
+      {
+        account: accountReducer,
+        project: projectReducer
+      },
       {
         metaReducers: [debug],
         initialState: { account: { token: utilService.getStoredToken(), error: null } }
-      }),
-    EffectsModule.forRoot([AccountEffects]),
+      }
+    ),
+    EffectsModule.forRoot([AccountEffects, ProjectEffects]),
     PanelModule,
     ButtonModule,
     InputTextModule,
@@ -59,7 +64,8 @@ const utilService = new UtilService();
     MessagesModule,
     MessageModule,
     SidebarModule,
-    MenubarModule
+    MenubarModule,
+    TableModule
   ],
   providers: [AccountService, MessageService, AuthGuardService, UtilService],
   bootstrap: [RootComponent]

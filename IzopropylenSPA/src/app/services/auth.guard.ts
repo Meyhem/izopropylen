@@ -12,7 +12,7 @@ export class AuthGuardService implements CanActivate {
                 private router: Router) { }
 
     canActivate(): Observable<boolean> {
-        return this.store.select(selectAccountToken)
+        return this.store.select(selectAccountToken())
             .pipe(
                 map(tok => tok && tok.expires > new Date()),
                 tap(authenticated => {

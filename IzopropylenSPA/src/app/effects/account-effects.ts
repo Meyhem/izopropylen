@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, switchMap, map, tap, throttleTime, mergeMap } from 'rxjs/operators';
+import { catchError, switchMap, map, tap, throttleTime } from 'rxjs/operators';
 
 import { AccountService } from '../services/account.service';
 import { Login, Register, StoreToken } from '../actions';

@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.accountError$ = this.store
-      .select(selectAccountError)
+      .select(selectAccountError())
       .pipe(takeUntil(this.destroyed$));
 
     this.accountError$.subscribe(e => {

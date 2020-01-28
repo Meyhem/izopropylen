@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   constructor(private store: Store<State>, private messageService: MessageService) {
-    this.accountError$ = store.select(selectAccountError)
+    this.accountError$ = store.select(selectAccountError())
       .pipe(takeUntil(this.destroyed$));
 
     this.accountError$
