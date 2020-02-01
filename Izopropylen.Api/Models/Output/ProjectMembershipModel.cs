@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Izopropylen.Api.Models.Output
 {
     public class ProjectMembershipModel

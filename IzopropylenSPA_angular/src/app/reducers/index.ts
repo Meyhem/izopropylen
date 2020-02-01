@@ -1,9 +1,9 @@
 import { AccountState } from './account-reducer';
 import { ActionReducer } from '@ngrx/store';
-import { ProjectState } from './project-reducer';
+import { ProjectState } from '../redux/project';
 
 export * from './account-reducer';
-export * from './project-reducer';
+export * from '../redux/project';
 
 export interface State {
     account: AccountState;

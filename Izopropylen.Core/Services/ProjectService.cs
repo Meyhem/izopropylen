@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Izopropylen.Core.Dto;
 using Izopropylen.Core.Exceptions;
 using Izopropylen.Core.Interfaces;
@@ -35,7 +34,7 @@ namespace Izopropylen.Core.Services
                 .Select(p => new ProjectMembershipDto
                 {
                     ProjectId = p.Id,
-                    Name = p .Name,
+                    Name = p.Name,
                     Role = p.Collaborators.First(c => c.AccountId == accountId).ProjectAccountRole
                 })
                 .ToListAsync();

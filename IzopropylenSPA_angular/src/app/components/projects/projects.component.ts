@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
 
-import { State, ProjectMembership, selectProjectMemberships } from 'src/app/reducers';
-import { FetchProjectMemberships } from 'src/app/actions/project-actions';
+import { State, ProjectMembership, selectProjectMemberships, FetchProjectMemberships } from 'src/app/reducers';
+
 import { takeUntil } from 'rxjs/operators';
 
 @Component({

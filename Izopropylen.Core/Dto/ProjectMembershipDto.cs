@@ -1,5 +1,4 @@
-﻿
-using Izopropylen.Data.Entity;
+﻿using Izopropylen.Data.Entity;
 
 namespace Izopropylen.Core.Dto
 {

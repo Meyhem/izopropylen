@@ -17,7 +17,7 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './routing.module';
-import { State, accountReducer, debug, projectReducer } from './reducers';
+import { State, accountReducer, debug, projectReducer, ProjectEffects } from './reducers';
 import { RootComponent } from './components/root/root.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -28,7 +28,8 @@ import { AccountEffects } from './effects/account-effects';
 import { AccountService } from './services/account.service';
 import { AuthGuardService } from './services/auth.guard';
 import { UtilService } from './services/util.service';
-import { ProjectEffects } from './effects/project-effects';
+
+import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 
 const utilService = new UtilService();
 
@@ -38,7 +39,8 @@ const utilService = new UtilService();
     LayoutComponent,
     LoginComponent,
     RegisterComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    ProjectDetailComponent
   ],
   imports: [
     BrowserModule,
