@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button, Card, Spinner } from 'react-bootstrap'
+import { Form, Button, Card, Spinner, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { Form as FForm, Field as FField } from 'react-final-form'
 import cls from 'classnames'
@@ -8,7 +8,7 @@ import { CenterLayout } from '../../common/center-layout'
 import { useMemoDispatch } from '../../hooks'
 import { required } from '../../validators'
 import { useSelector } from 'react-redux'
-import { selectIsLoading } from './selectors'
+import { selectIsLoading, selectErrorMessage } from './selectors'
 import { authenticate } from './actions'
 
 
@@ -20,6 +20,7 @@ export const Login = () => {
 
     const dispatch = useMemoDispatch()
     const isLoading = useSelector(selectIsLoading)
+    const errorMessage = useSelector(selectErrorMessage)
     const onSubmit = (username: string, password: string) => dispatch(authenticate.request({ username, password }))
 
     return <CenterLayout>
@@ -60,8 +61,8 @@ export const Login = () => {
                                             <Form.Text className='invalid-feedback'>{meta.error}</Form.Text>}
                                     </>}
                             </FField>
-
                         </Form.Group>
+                        {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
                         <div className='d-flex'>
                             <Link to='/register'>Register</Link>
                             <Button

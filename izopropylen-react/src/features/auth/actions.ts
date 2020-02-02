@@ -1,9 +1,8 @@
 import { createAsyncAction } from 'typesafe-actions';
-import { AjaxError } from 'rxjs/ajax';
+import { AxiosError } from 'axios';
 
 export const authenticate = createAsyncAction(
     'AUTHENTICATE_REQUEST',
     'AUTHENTICATE_SUCCESS',
     'AUTHENTICATE_FAILURE',
-)<{username: string, password: string}, {token: string, expiresAt: Date}, AjaxError>();
-
+)<{username: string, password: string}, {token: string, expiresAt: Date}, AxiosError>();
