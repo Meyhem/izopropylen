@@ -8,5 +8,5 @@ export const axiosInstance = Axios.create({
 
 export const makeRestClient = (axios: Axios) => ({
     authenticate: (username: string, password: string) =>
-        axios.post('/accounts/token', { username, password } )
+        axios.post('/accounts/token', { username, password })
 });

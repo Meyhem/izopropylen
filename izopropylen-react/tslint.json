@@ -1,9 +1,17 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint:latest", "tslint-react", "prettier"
     ],
+    "plugins": ["prettier"],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "jsx-wrap-multiline": false,
+        "jsx-no-lambda": false,
+        "jsx-no-multiline-js": false
+    },
+    "linterOptions": {
+        "exclude": ["node_modules"]
+    },
     "rulesDirectory": []
 }

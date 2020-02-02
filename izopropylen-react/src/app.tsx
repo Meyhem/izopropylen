@@ -12,8 +12,8 @@ export const App = () => {
   return <Provider store={store}>
     <Router history={history}>
       <Switch>
-        <Route exact path='/' component={MyProjects} />
-        <Route exact path='/login' component={Login} />
+        <Route exact={true} path='/' component={MyProjects} />
+        <Route exact={true} path='/login' component={Login} />
         <Redirect to='/login' />
       </Switch>
     </Router>
