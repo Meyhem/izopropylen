@@ -1,4 +1,4 @@
-import { Auth } from 'Models';
+import { Auth } from 'models';
 import * as actions from './actions';
 
 import { createReducer, ActionType } from 'typesafe-actions';

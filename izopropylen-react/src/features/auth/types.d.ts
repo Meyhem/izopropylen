@@ -1,4 +1,4 @@
-declare module 'Models' {
+declare module 'models' {
     export interface Auth {
         token?: string
         expiresAt?: Date

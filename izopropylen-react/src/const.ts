@@ -1,1 +1,1 @@
-export const DUMMY = 0;
+export const API_URL = 'http://localhost:5000/api';

@@ -1,9 +1,19 @@
-import React from 'react';
+import React from 'react'
+import { Provider } from 'react-redux'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 
-import { Provider } from 'react-redux';
+import { store } from './store'
+import { Login } from './features/auth/login'
 
-const App = () => {
-  return <Provider store={}></Provider>
+export const App = () => {
+
+  return <Provider store={store}>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path='/login' component={Login}/>
+
+        <Redirect to='/login' />
+      </Switch>
+    </BrowserRouter>
+  </Provider>
 }
-
-export default App;
