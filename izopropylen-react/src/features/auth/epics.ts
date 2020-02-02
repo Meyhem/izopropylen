@@ -1,16 +1,17 @@
 import { RootEpic } from 'models'
 import { isActionOf } from 'typesafe-actions'
 import { of } from 'rxjs'
-import { ajax } from 'rxjs/ajax'
 import { map, filter, switchMap, catchError } from 'rxjs/operators'
 
 import { authenticate } from './actions'
-import { formatApiUrl } from '../../util'
 
-export const authenticate$: RootEpic = (action$, state$, { }) =>
+export const authenticate$: RootEpic = (action$, state$, services) =>
     action$.pipe(
         filter(isActionOf(authenticate.request)),
-        switchMap(r => ajax.post(formatApiUrl('/accounts/token'), r.payload)),
-        map(res => authenticate.success({ token: '', expiresAt: new Date() })),
-        catchError(err => of(authenticate.failure(err)))
+        switchMap(a => services.rest.authenticate(a.payload.username, a.payload.password)
+            .pipe(
+                map(res => authenticate.success({ token: res.data.token, expiresAt: new Date(res.data.expiresAt) })),
+                catchError(err => of(authenticate.failure(err)))
+            )
+        )
     )

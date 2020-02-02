@@ -8,4 +8,6 @@ const init: Auth = {
 }
 
 export default createReducer<Auth, ActionType<typeof actions>>(init)
-    .handleAction([actions.authenticate.request], (s, a) => ({...s, loading: true}));
+    .handleAction(actions.authenticate.request, (s, a) => ({...s, loading: true, error: undefined}))
+    .handleAction(actions.authenticate.failure, (s, a) => ({...s, loading: false, error: a.payload}))
+    .handleAction(actions.authenticate.success, (s, a) => ({...s, loading: false, error: undefined}));

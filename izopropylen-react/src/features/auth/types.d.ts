@@ -2,7 +2,7 @@ declare module 'models' {
     export interface Auth {
         token?: string
         expiresAt?: Date
-        error?: Error
+        error?: import('rxjs/ajax').AjaxError
         loading: boolean
     }
 }
