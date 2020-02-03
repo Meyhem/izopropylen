@@ -10,7 +10,7 @@ export const authenticate$: RootEpic = (action$, state$, services) =>
         filter(isActionOf(authenticate.request)),
         switchMap(a => services.rest.authenticate(a.payload.username, a.payload.password)
             .pipe(
-                map(res => authenticate.success({ token: res.data.token, expiresAt: new Date(res.data.expiresAt) })),
+                map(res => authenticate.success({ token: res.data.token, expiresAt: new Date(res.data.expires) })),
                 tap(() => {
                     services.history.push('/')
                 }),

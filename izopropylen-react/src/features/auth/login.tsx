@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { useSelector } from 'react-redux'
 import { Form, Button, Card, Spinner, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { Form as FForm, Field as FField } from 'react-final-form'
@@ -7,7 +8,6 @@ import cls from 'classnames'
 import { CenterLayout } from '../../common/center-layout'
 import { useMemoDispatch } from '../../hooks'
 import { required } from '../../validators'
-import { useSelector } from 'react-redux'
 import { selectIsLoading, selectErrorMessage } from './selectors'
 import { authenticate } from './actions'
 
@@ -19,7 +19,7 @@ export const Login = () => {
     const dispatch = useMemoDispatch()
     const isLoading = useSelector(selectIsLoading)
     const errorMessage = useSelector(selectErrorMessage)
-    const onSubmit = useCallback((username: string, password: string) => dispatch(authenticate.request({ username, password })), [])
+    const onSubmit = useCallback((username: string, password: string) => dispatch(authenticate.request({ username, password })), [dispatch])
 
     return <CenterLayout>
         <Card>

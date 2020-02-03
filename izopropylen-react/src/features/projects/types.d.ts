@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios'
+
 declare module 'models' {
     export enum ProjectRole {
         Admin = 'Admin',
@@ -9,5 +11,11 @@ declare module 'models' {
         projectId: number
         name: string
         role: ProjectRole
+    }
+
+    export interface Projects {
+        memberships?: ProjectMembership[]
+        loading: boolean
+        error?: AxiosError
     }
 }
