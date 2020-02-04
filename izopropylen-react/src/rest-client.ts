@@ -4,5 +4,7 @@ export const makeRestClient = (axios: Axios) => ({
     authenticate: (username: string, password: string) =>
         axios.post('/accounts/token', { username, password }),
 
-    fetchProjects: () => axios.get<[{projectId: number, name: string, role: string}]>('/projects/me')
+    fetchProjects: () => axios.get<[{projectId: number, name: string, role: string}]>('/projects/me'),
+
+    createProject: (data: {name: string}) => axios.post<number>('/projects', data)
 })

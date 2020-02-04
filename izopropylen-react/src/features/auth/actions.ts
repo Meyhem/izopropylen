@@ -1,5 +1,5 @@
-import { createAsyncAction } from 'typesafe-actions';
-import { AxiosError } from 'axios';
+import { createAsyncAction } from 'typesafe-actions'
+import { AxiosError } from 'axios'
 
 export const authenticate = createAsyncAction(
     'AUTHENTICATE_REQUEST',

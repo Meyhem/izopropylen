@@ -16,6 +16,8 @@ declare module 'models' {
     export interface Projects {
         memberships?: ProjectMembership[]
         loading: boolean
-        error?: AxiosError
+        dialogOpen?: boolean
+        fetchProjectsError?: AxiosError
+        createProjectError?: AxiosError
     }
 }

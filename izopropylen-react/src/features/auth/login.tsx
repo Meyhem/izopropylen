@@ -10,10 +10,7 @@ import { useMemoDispatch } from '../../hooks'
 import { required } from '../../validators'
 import { selectIsLoading, selectErrorMessage } from './selectors'
 import { authenticate } from './actions'
-
-const isInvalid = (meta: { touched?: boolean, error?: any }) => meta.touched && meta.error
-const isValid = (meta: { touched?: boolean, error?: any }) => meta.touched && !meta.error
-
+import { isInvalid, isValid } from '../../util'
 
 export const Login = () => {
     const dispatch = useMemoDispatch()
@@ -62,7 +59,7 @@ export const Login = () => {
                             </Form.Group>
                             {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
                             <div className='d-flex'>
-                                <Link to='/register'>Register</Link>
+                                <Link className='btn btn-link' to='/register'>Register</Link>
                                 <Button
                                     className='ml-auto'
                                     type='submit'

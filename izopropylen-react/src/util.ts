@@ -37,3 +37,7 @@ export const getStoredAuthToken = (): {token: string, expiresAt: Date} | null =>
 
     return tok
 }
+
+export const isInvalid = (meta: { touched?: boolean, error?: any }) => meta.touched && meta.error
+
+export const isValid = (meta: { touched?: boolean, error?: any }) => meta.touched && !meta.error
