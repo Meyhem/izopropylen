@@ -35,6 +35,15 @@ namespace Izopropylen.Core.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<string>> GetProjectCultureCodes(int projectId)
+        {
+            return await keyRepository
+                .Query()
+                .Where(k => k.ProjectId == projectId)
+                .SelectMany(k => k.Values.Select(v => v.CultureCode).Distinct())
+                .ToListAsync();
+        }
+
         public async Task<int> CreateKey(int projectId, string key)
         {
             var existing = await keyRepository.Query()

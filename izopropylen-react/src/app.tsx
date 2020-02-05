@@ -7,6 +7,7 @@ import { Login } from './features/auth/login'
 import { MyProjects } from './features/projects/my-projects'
 import { history } from './history'
 import { ProtectedRoute } from './common/protected-route'
+import { ProjectDetail } from './features/projects/project-detail'
 
 export const App = () => {
 
@@ -14,6 +15,7 @@ export const App = () => {
     <Router history={history}>
       <Switch>
         <ProtectedRoute exact={true} path='/' fallbackRoute='/login' component={MyProjects}/>
+        <ProtectedRoute exact={true} path='/projects/:id' fallbackRoute='/login' component={ProjectDetail} />
         <Route exact={true} path='/login' component={Login} />
         <Redirect to='/login' />
       </Switch>

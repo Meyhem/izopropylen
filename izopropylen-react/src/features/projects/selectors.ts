@@ -8,3 +8,10 @@ export const selectIsLoading = createSelector(selectFeature, p => p.loading)
 export const selectIsDialogOpen = createSelector(selectFeature, p => !!p.dialogOpen)
 export const selectFetchProjectsErrorMessage = createSelector(selectFeature, a => a.fetchProjectsError?.response?.data?.message)
 export const selectCreateProjectsErrorMessage = createSelector(selectFeature, a => a.createProjectError?.response?.data?.message)
+
+export const selectTranslationKeys = createSelector(selectFeature, a => a.detail?.keys)
+export const selectCultureCodes = createSelector(selectFeature, a => a.detail?.cultureCodes)
+export const selectProjectName = createSelector(selectFeature, a => a.detail?.name)
+
+export const selectSelectedCultureCodes = createSelector(selectFeature,
+    a => Object.keys(a.translations).filter(k => !!a.translations[k]))

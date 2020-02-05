@@ -13,10 +13,38 @@ declare module 'models' {
         role: ProjectRole
     }
 
+    export interface TranslationKey {
+        id: number
+        name: string
+    }
+
+    export interface ProjectDetail {
+        id: number
+        name: string
+        keys: TranslationKey[]
+        cultureCodes: string[]
+    }
+
+    export interface TranslationGroup {
+        cultureCode: string
+        translations: { [key: string]: Translation }
+
+        loading: boolean
+    }
+
+    export interface Translation {
+        value?: string
+        loading?: boolean
+    }
+
     export interface Projects {
         memberships?: ProjectMembership[]
+        detail?: ProjectDetail
+        translations: { [code: string]: TranslationGroup | undefined }
+
         loading: boolean
         dialogOpen?: boolean
+
         fetchProjectsError?: AxiosError
         createProjectError?: AxiosError
     }

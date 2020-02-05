@@ -1,4 +1,4 @@
-import { ProjectMembership } from 'models'
+import { ProjectMembership, ProjectDetail } from 'models'
 import { createAsyncAction, createAction } from 'typesafe-actions'
 import { AxiosError } from 'axios'
 
@@ -15,3 +15,11 @@ export const createProject = createAsyncAction(
 )<{name: string}, void, AxiosError>()
 
 export const toggleDialog = createAction('TOGGLE_DIALOG')<{open: boolean}>()
+
+export const fetchProjectDetail = createAsyncAction(
+    'FETCH_PROJECT_DETAIL_REQUEST',
+    'FETCH_PROJECT_DETAIL_SUCCESS',
+    'FETCH_PROJECT_DETAIL_FAILURE'
+)<number, ProjectDetail, AxiosError>()
+
+export const toggleCultureCode = createAction('TOGGLE_CULTURE_CODE')<{code: string, show: boolean}>()

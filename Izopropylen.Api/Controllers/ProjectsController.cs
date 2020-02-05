@@ -76,5 +76,31 @@ namespace Izopropylen.Api.Controllers
 
             return mapper.Map<IEnumerable<TranslationKeyModel>>(keys);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ProjectDetail> GetDetail(int id)
+        {
+            await securityService.ThrowIfNoAccessToProjectWithMinimalRole(
+                HttpContext.User.GetId(),
+                id,
+                ProjectAccountRole.Viewer
+            );
+
+            var keysTask = translationService.GetProjectKeys(id);
+            var codesTask = translationService.GetProjectCultureCodes(id);
+            var projectTask = projectService.GetProject(id);
+
+            await Task.WhenAll(keysTask, codesTask, projectTask);
+
+            var project = await projectTask;
+
+            return new ProjectDetail
+            {
+                Id = project.Id,
+                Name = project.Name,
+                CultureCodes = await codesTask,
+                TranslationKeys = mapper.Map < IEnumerable<TranslationKeyModel>>(await keysTask)
+            };
+        }
     }
 }
