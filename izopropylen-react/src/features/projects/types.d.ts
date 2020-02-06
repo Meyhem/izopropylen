@@ -27,13 +27,15 @@ declare module 'models' {
 
     export interface TranslationGroup {
         cultureCode: string
-        translations: { [key: string]: Translation }
+        translations: { [keyId: number]: TranslationValue }
 
         loading: boolean
     }
 
-    export interface Translation {
-        value?: string
+    export interface TranslationValue {
+        valueId: number
+
+        value: string
         loading?: boolean
     }
 
@@ -47,5 +49,6 @@ declare module 'models' {
 
         fetchProjectsError?: AxiosError
         createProjectError?: AxiosError
+        fetchTranslationError?: AxiosError
     }
 }

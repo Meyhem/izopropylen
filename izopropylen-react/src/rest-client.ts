@@ -8,5 +8,7 @@ export const makeRestClient = (axios: Axios) => ({
 
     createProject: (data: {name: string}) => axios.post<number>('/projects', data),
 
-    fetchProjectDetail: (id: number) => axios.get(`/projects/${id}`)
+    fetchProjectDetail: (id: number) => axios.get(`/projects/${id}`),
+
+    fetchTranslations: (projectId: number, cultureCode: string) => axios.get(`/projects/${projectId}/${cultureCode}`)
 })

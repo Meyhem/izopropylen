@@ -80,7 +80,5 @@ namespace Izopropylen.Api.Controllers
 
             return mapper.Map<IEnumerable<TranslationValueModel>>(values);
         }
-
-
     }
 }

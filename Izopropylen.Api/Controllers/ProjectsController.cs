@@ -99,8 +99,23 @@ namespace Izopropylen.Api.Controllers
                 Id = project.Id,
                 Name = project.Name,
                 CultureCodes = await codesTask,
-                TranslationKeys = mapper.Map < IEnumerable<TranslationKeyModel>>(await keysTask)
+                TranslationKeys = mapper.Map<IEnumerable<TranslationKeyModel>>(await keysTask)
             };
+        }
+
+        [HttpGet("{projectId}/{cultureCode}")]
+        public async Task<IEnumerable<TranslationValueModel>>
+            GetTranslationsByCode(int projectId, string cultureCode)
+        {
+            await securityService.ThrowIfNoAccessToProjectWithMinimalRole(
+               HttpContext.User.GetId(),
+               projectId,
+               ProjectAccountRole.Viewer
+            );
+
+            var values = await translationService.GetValuesByCode(projectId, cultureCode);
+
+            return mapper.Map<IEnumerable<TranslationValueModel>>(values);
         }
     }
 }

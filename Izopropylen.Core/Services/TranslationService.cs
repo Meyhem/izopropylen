@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Izopropylen.Core.Services
 {
-    public class TranslationService: ITranslationService
+    public class TranslationService : ITranslationService
     {
         private readonly IRepository<TranslationKey> keyRepository;
         private readonly IRepository<TranslationValue> valueRepository;
@@ -99,11 +99,22 @@ namespace Izopropylen.Core.Services
                 .Select(v => new TranslationValueDto
                 {
                     TranslationKeyId = v.TranslationKeyId,
-
                     TranslationValueId = v.Id,
-
                     CultureCode = v.CultureCode,
+                    Value = v.Value
+                })
+                .ToListAsync();
+        }
 
+        public async Task<IEnumerable<TranslationValueDto>> GetValuesByCode(int projectId, string cultureCode)
+        {
+            return await valueRepository.Query()
+                .Where(v => v.TranslationKey.ProjectId == projectId && v.CultureCode == cultureCode)
+                .Select(v => new TranslationValueDto
+                {
+                    TranslationKeyId = v.TranslationKeyId,
+                    TranslationValueId = v.Id,
+                    CultureCode = v.CultureCode,
                     Value = v.Value
                 })
                 .ToListAsync();

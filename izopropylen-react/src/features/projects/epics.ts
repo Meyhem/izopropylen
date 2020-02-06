@@ -1,9 +1,9 @@
-import { RootEpic, ProjectRole, ProjectDetail } from 'models'
+import { RootEpic, ProjectRole, ProjectDetail, TranslationValue } from 'models'
 import { isActionOf } from 'typesafe-actions'
 import { map, filter, switchMap, catchError, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 
-import { fetchProjects, createProject, toggleDialog, fetchProjectDetail } from './actions'
+import { fetchProjects, createProject, toggleDialog, fetchProjectDetail, fetchTranslations } from './actions'
 
 export const fetchProjects$: RootEpic = (action$, state$, services) =>
     action$.pipe(
@@ -45,6 +45,27 @@ export const fetchProjectDetail$: RootEpic = (action$, state$, services) =>
                 map(res => mapDetailResponse(res.data)),
                 map(data => fetchProjectDetail.success(data)),
                 catchError(err => of(fetchProjects.failure(err)))
+            )
+        )
+    )
+
+function mapTranslationValues(values: any[]): { [k: number]: TranslationValue} {
+    return values.reduce((acc, v) => {
+        acc[v.translationKeyId] = { valueId: v.translationValueId, value: v.value}
+        return acc
+    }, {})
+}
+
+export const fetchTranslations$: RootEpic = (action$, state$, services) =>
+    action$.pipe(
+        filter(isActionOf(fetchTranslations.request)),
+        switchMap(a => services.rest.fetchTranslations(a.payload.projectId, a.payload.code)
+            .pipe(
+                map(res => fetchTranslations.success({
+                    code: a.payload.code,
+                    translations: mapTranslationValues(res.data)
+                })),
+                catchError(err => of(fetchTranslations.failure(err)))
             )
         )
     )

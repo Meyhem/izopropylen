@@ -12,6 +12,7 @@ namespace Izopropylen.Core.Interfaces
         Task<IEnumerable<string>> GetProjectCultureCodes(int projectId);
         Task<IEnumerable<TranslationKeyDto>> GetProjectKeys(int projectId);
         Task<IEnumerable<TranslationValueDto>> GetValues(int translationKeyId);
+        Task<IEnumerable<TranslationValueDto>> GetValuesByCode(int projectId, string cultureCode);
         Task UpsertValue(int keyId, CultureInfo cultureInfo, string value);
     }
 }

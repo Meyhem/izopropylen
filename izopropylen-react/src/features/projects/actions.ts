@@ -1,4 +1,4 @@
-import { ProjectMembership, ProjectDetail } from 'models'
+import { ProjectMembership, ProjectDetail, TranslationValue } from 'models'
 import { createAsyncAction, createAction } from 'typesafe-actions'
 import { AxiosError } from 'axios'
 
@@ -22,4 +22,10 @@ export const fetchProjectDetail = createAsyncAction(
     'FETCH_PROJECT_DETAIL_FAILURE'
 )<number, ProjectDetail, AxiosError>()
 
-export const toggleCultureCode = createAction('TOGGLE_CULTURE_CODE')<{code: string, show: boolean}>()
+export const clearCultureCodeSelection = createAction('CLEAR_CULTURE_CODE_SELECTION')<{code: string}>()
+
+export const fetchTranslations = createAsyncAction(
+    'FETCH_TRANSLATIONS_REQUEST',
+    'FETCH_TRANSLATIONS_SUCCESS',
+    'FETCH_TRANSLATIONS_FAILURE'
+)<{projectId: number, code: string}, {code: string, translations: {[keyId: number]: TranslationValue}}, AxiosError>()

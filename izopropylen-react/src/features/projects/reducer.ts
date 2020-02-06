@@ -33,13 +33,38 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
     .handleAction(actions.fetchProjectDetail.success,
         (s, a) => ({ ...s, loading: false, error: undefined, detail: a.payload }))
 
-    .handleAction(actions.toggleCultureCode, (s, a) => ({
+    .handleAction(actions.clearCultureCodeSelection, (s, a) => ({
         ...s,
         translations: {
             ...s.translations,
-            [a.payload.code]: a.payload.show ?
-                ({ cultureCode: a.payload.code, loading: false, translations: {} })
-                :
-                undefined
+            [a.payload.code]: undefined
         }
     }))
+    .handleAction(actions.fetchTranslations.request,
+        (s, a) => ({
+            ...s,
+            translations: {
+                ...s.translations,
+                [a.payload.code]: ({
+                    cultureCode: a.payload.code,
+                    loading: true,
+                    translations: {}
+                })
+
+            }
+        }))
+    .handleAction(actions.fetchTranslations.failure,
+        (s, a) => ({ ...s, loading: false, fetchTranslationError: a.payload }))
+    .handleAction(actions.fetchTranslations.success,
+        (s, a) => ({
+            ...s,
+            translations: {
+                ...s.translations,
+                [a.payload.code]: ({
+                    cultureCode: a.payload.code,
+                    loading: false,
+                    translations: a.payload.translations
+                })
+
+            }
+        }))
