@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { Button, Table, Spinner, Container } from 'react-bootstrap'
 
 import { MainLayout } from '../../common/main-layout'
 import { useMemoDispatch } from '../../hooks'
-import { fetchProjectDetail, fetchTranslations, clearCultureCodeSelection } from './actions'
+import { fetchProjectDetail, fetchTranslations, clearCultureCodeSelection, setEditMode } from './actions'
 import {
     selectTranslationKeys,
     selectCultureCodes,
@@ -31,6 +31,7 @@ export const ProjectDetail = () => {
 
     const fetchTranslationsCb = (code: string) => dispatch(fetchTranslations.request({ projectId, code }))
     const clearCultureCodeSelectionCb = (code: string) => dispatch(clearCultureCodeSelection({ code }))
+    const setEditModeCb = (code: string, keyId: number, edit: boolean) => dispatch(setEditMode({ code, keyId, edit }))
 
     React.useEffect(() => {
         dispatch(fetchProjectDetail.request(Number(id)))
@@ -58,7 +59,9 @@ export const ProjectDetail = () => {
                 <thead>
                     <tr>
                         <th>Key</th>
-                        {selectedCultureCodes.map(scc => <th key={scc}>{scc}</th>)}
+                        {selectedCultureCodes.map(scc => <th key={scc}>
+                            {scc} {selectIsLoadingCultureCode(translations[scc]) && <Spinner animation='border' size='sm' />}
+                        </th>)}
                     </tr>
                 </thead>
                 <tbody>
@@ -66,8 +69,13 @@ export const ProjectDetail = () => {
                         <td>{tk.name}</td>
                         {selectedCultureCodes.map(scc => {
                             const translationValue = selectTranslationValue(translations[scc], tk.id)
-                            return <td key={scc}>
-                                <TranslationValueField value={translationValue?.value} />
+                            return <td key={scc} onClick={() => !translationValue?.editMode && setEditModeCb(scc, tk.id, true)}>
+                                <TranslationValueField
+                                    value={translationValue?.value}
+                                    editMode={!!translationValue?.editMode}
+                                    onCancel={() => setEditModeCb(scc, tk.id, false)}
+                                    onCommit={v => console.log('commited', v)}
+                                />
                             </td>
                         })}
                     </tr>)}
@@ -79,11 +87,36 @@ export const ProjectDetail = () => {
 
 interface TranslationValueFieldProps {
     value: string | undefined
+    editMode: boolean
+    onCommit?: (v: string) => void
+    onCancel?: () => void
 }
 
 const TranslationValueField: React.FC<TranslationValueFieldProps> = React.memo(
-    ({ value }) =>
-        <span>
-            {value}
+    ({ value, editMode, onCommit, onCancel }) => {
+        const fieldRef = useRef<HTMLInputElement>()
+        const [uncommited, setUncommited] = useState('')
+        const setUncommitedCb = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => setUncommited(evt.target.value), [])
+
+        React.useEffect(() => {
+            if (editMode) {
+                fieldRef.current!.focus()
+                setUncommited(value || '')
+            }
+        }, [editMode])
+
+        return <span>
+            {!editMode && value}
+            {editMode && <input
+                ref={r => fieldRef.current = r!}
+                className='form-control'
+                type='text'
+                value={uncommited}
+                onChange={setUncommitedCb}
+                onBlur={e => onCommit && onCommit(e.target.value)}
+                onKeyUp={e => e.key === 'Escape' && onCancel && onCancel()}
+            />}
         </span>
+    }
+
 )

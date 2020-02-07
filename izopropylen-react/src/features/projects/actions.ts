@@ -29,3 +29,5 @@ export const fetchTranslations = createAsyncAction(
     'FETCH_TRANSLATIONS_SUCCESS',
     'FETCH_TRANSLATIONS_FAILURE'
 )<{projectId: number, code: string}, {code: string, translations: {[keyId: number]: TranslationValue}}, AxiosError>()
+
+export const setEditMode = createAction('SET_EDIT_MODE')<{code: string, keyId: number, edit: boolean}>()

@@ -34,8 +34,9 @@ declare module 'models' {
 
     export interface TranslationValue {
         valueId: number
-
         value: string
+
+        editMode?: boolean
         loading?: boolean
     }
 

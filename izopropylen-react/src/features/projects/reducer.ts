@@ -1,4 +1,6 @@
 import { Projects } from 'models'
+import produce from 'immer'
+
 import * as actions from './actions'
 
 import { createReducer, ActionType } from 'typesafe-actions'
@@ -60,11 +62,17 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
             ...s,
             translations: {
                 ...s.translations,
-                [a.payload.code]: ({
+                [a.payload.code]: {
                     cultureCode: a.payload.code,
                     loading: false,
                     translations: a.payload.translations
-                })
-
+                }
             }
         }))
+
+    .handleAction(actions.setEditMode, (s, a) => produce(s, draft => {
+        const group = draft.translations[a.payload.code]
+        if (group) {
+            group.translations[a.payload.keyId].editMode = a.payload.edit
+        }
+    }))
