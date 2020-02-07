@@ -17,6 +17,8 @@ import {
 } from './selectors'
 import { arrayShallowEqual } from '../../util'
 
+import './project-detail.sass'
+
 export const ProjectDetail = () => {
     const dispatch = useMemoDispatch()
     const { id } = useParams()
@@ -52,7 +54,7 @@ export const ProjectDetail = () => {
                     </Button>)}
         </Container>
         <Container fluid={true}>
-            <Table bordered={true} responsive={true} striped={true}>
+            <Table className='translation-table' bordered={true} responsive={true} striped={true}>
                 <thead>
                     <tr>
                         <th>Key</th>
