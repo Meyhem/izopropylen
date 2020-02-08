@@ -10,5 +10,10 @@ export const makeRestClient = (axios: Axios) => ({
 
     fetchProjectDetail: (id: number) => axios.get(`/projects/${id}`),
 
-    fetchTranslations: (projectId: number, cultureCode: string) => axios.get(`/projects/${projectId}/${cultureCode}`)
+    fetchTranslations: (projectId: number, cultureCode: string) => axios.get(`/projects/${projectId}/${cultureCode}`),
+
+    saveTranslationValue: (code: string, keyId: number, value: string) =>
+        axios.post(`/translations/${keyId}/values/${code}`, {
+            value
+        })
 })

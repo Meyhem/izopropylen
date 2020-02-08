@@ -76,3 +76,10 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
             group.translations[a.payload.keyId].editMode = a.payload.edit
         }
     }))
+
+    .handleAction(actions.saveTranslationValue.success, (s, a) => produce(s, draft => {
+        const group = draft.translations[a.payload.code]
+        if (group) {
+            group.translations[a.payload.keyId].value = a.payload.value
+        }
+    }))

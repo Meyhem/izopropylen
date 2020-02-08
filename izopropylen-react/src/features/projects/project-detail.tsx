@@ -5,7 +5,7 @@ import { Button, Table, Spinner, Container } from 'react-bootstrap'
 
 import { MainLayout } from '../../common/main-layout'
 import { useMemoDispatch } from '../../hooks'
-import { fetchProjectDetail, fetchTranslations, clearCultureCodeSelection, setEditMode } from './actions'
+import { fetchProjectDetail, fetchTranslations, clearCultureCodeSelection, setEditMode, saveTranslationValue } from './actions'
 import {
     selectTranslationKeys,
     selectCultureCodes,
@@ -32,6 +32,7 @@ export const ProjectDetail = () => {
     const fetchTranslationsCb = (code: string) => dispatch(fetchTranslations.request({ projectId, code }))
     const clearCultureCodeSelectionCb = (code: string) => dispatch(clearCultureCodeSelection({ code }))
     const setEditModeCb = (code: string, keyId: number, edit: boolean) => dispatch(setEditMode({ code, keyId, edit }))
+    const saveTranslationCb = (code: string, keyId: number, value: string) => dispatch(saveTranslationValue.request({ code, keyId, value }))
 
     React.useEffect(() => {
         dispatch(fetchProjectDetail.request(Number(id)))
@@ -73,8 +74,8 @@ export const ProjectDetail = () => {
                                 <TranslationValueField
                                     value={translationValue?.value}
                                     editMode={!!translationValue?.editMode}
-                                    onCancel={() => setEditModeCb(scc, tk.id, false)}
-                                    onCommit={v => console.log('commited', v)}
+                                    onDone={() => setEditModeCb(scc, tk.id, false)}
+                                    onCommit={v => saveTranslationCb(scc, tk.id, v)}
                                 />
                             </td>
                         })}
@@ -88,12 +89,12 @@ export const ProjectDetail = () => {
 interface TranslationValueFieldProps {
     value: string | undefined
     editMode: boolean
-    onCommit?: (v: string) => void
-    onCancel?: () => void
+    onCommit: (v: string) => void
+    onDone: () => void
 }
 
 const TranslationValueField: React.FC<TranslationValueFieldProps> = React.memo(
-    ({ value, editMode, onCommit, onCancel }) => {
+    ({ value, editMode, onCommit, onDone }) => {
         const fieldRef = useRef<HTMLInputElement>()
         const [uncommited, setUncommited] = useState('')
         const setUncommitedCb = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => setUncommited(evt.target.value), [])
@@ -103,7 +104,17 @@ const TranslationValueField: React.FC<TranslationValueFieldProps> = React.memo(
                 fieldRef.current!.focus()
                 setUncommited(value || '')
             }
+            // eslint-disable-next-line
         }, [editMode])
+
+        const keyHandler = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+            switch (e.key) {
+                case 'Escape':
+                    return onDone()
+                case 'Enter':
+                    return onCommit((e.target as any).value)
+            }
+        }, [onDone, onCommit])
 
         return <span>
             {!editMode && value}
@@ -113,8 +124,8 @@ const TranslationValueField: React.FC<TranslationValueFieldProps> = React.memo(
                 type='text'
                 value={uncommited}
                 onChange={setUncommitedCb}
-                onBlur={e => onCommit && onCommit(e.target.value)}
-                onKeyUp={e => e.key === 'Escape' && onCancel && onCancel()}
+                onBlur={e => onCommit(e.target.value)}
+                onKeyUp={keyHandler}
             />}
         </span>
     }

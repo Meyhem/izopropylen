@@ -31,3 +31,9 @@ export const fetchTranslations = createAsyncAction(
 )<{projectId: number, code: string}, {code: string, translations: {[keyId: number]: TranslationValue}}, AxiosError>()
 
 export const setEditMode = createAction('SET_EDIT_MODE')<{code: string, keyId: number, edit: boolean}>()
+
+export const saveTranslationValue = createAsyncAction(
+    'SAVE_TRANSLATION_REQUEST',
+    'SAVE_TRANSLATION_SUCCESS',
+    'SAVE_TRANSLATION_FAILURE'
+)<{code: string, keyId: number, value: string}, {code: string, keyId: number, value: string}, AxiosError>()

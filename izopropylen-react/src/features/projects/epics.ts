@@ -3,7 +3,7 @@ import { isActionOf } from 'typesafe-actions'
 import { map, filter, switchMap, catchError, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 
-import { fetchProjects, createProject, toggleDialog, fetchProjectDetail, fetchTranslations } from './actions'
+import { fetchProjects, createProject, toggleDialog, fetchProjectDetail, fetchTranslations, saveTranslationValue, setEditMode } from './actions'
 
 export const fetchProjects$: RootEpic = (action$, state$, services) =>
     action$.pipe(
@@ -66,6 +66,28 @@ export const fetchTranslations$: RootEpic = (action$, state$, services) =>
                     translations: mapTranslationValues(res.data)
                 })),
                 catchError(err => of(fetchTranslations.failure(err)))
+            )
+        )
+    )
+
+export const saveTranslationValue$: RootEpic = (action$, state$, services) =>
+    action$.pipe(
+        filter(isActionOf(saveTranslationValue.request)),
+        switchMap(a => services.rest.saveTranslationValue(a.payload.code, a.payload.keyId, a.payload.value)
+            .pipe(
+                mergeMap(res => [
+                    saveTranslationValue.success({
+                        code: a.payload.code,
+                        keyId: a.payload.keyId,
+                        value: a.payload.value
+                    }),
+                    setEditMode({
+                        code: a.payload.code,
+                        keyId: a.payload.keyId,
+                        edit: false
+                    })
+                ]),
+                catchError(err => of(saveTranslationValue.failure(err)))
             )
         )
     )
