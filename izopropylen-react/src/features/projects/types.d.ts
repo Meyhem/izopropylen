@@ -23,6 +23,8 @@ declare module 'models' {
         name: string
         keys: TranslationKey[]
         cultureCodes: string[]
+
+        newKeyName: string
     }
 
     export interface TranslationGroup {

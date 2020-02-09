@@ -3,7 +3,7 @@ import { isActionOf } from 'typesafe-actions'
 import { map, filter, switchMap, catchError, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 
-import { fetchProjects, createProject, toggleDialog, fetchProjectDetail, fetchTranslations, saveTranslationValue, setEditMode } from './actions'
+import { fetchProjects, createProject, toggleDialog, fetchProjectDetail, fetchTranslations, saveTranslationValue, setEditMode, createKey, setNewKeyName } from './actions'
 
 export const fetchProjects$: RootEpic = (action$, state$, services) =>
     action$.pipe(
@@ -32,8 +32,9 @@ function mapDetailResponse(r: any): ProjectDetail {
     return {
         id: r.id,
         name: r.name,
-        cultureCodes: r.cultureCodes,
-        keys: r.translationKeys.map((tk: any) => ({ id: tk.translationKeyId, name: tk.key }))
+        cultureCodes: r.cultureCodes.sort((a: string, b: string) => a.localeCompare(b)),
+        keys: r.translationKeys.map((tk: any) => ({ id: tk.translationKeyId, name: tk.key })),
+        newKeyName: ''
     }
 }
 
@@ -88,6 +89,20 @@ export const saveTranslationValue$: RootEpic = (action$, state$, services) =>
                     })
                 ]),
                 catchError(err => of(saveTranslationValue.failure(err)))
+            )
+        )
+    )
+
+export const createKey$: RootEpic = (action$, state$, services) =>
+    action$.pipe(
+        filter(isActionOf(createKey.request)),
+        switchMap(a => services.rest.createKey(a.payload.projectId, a.payload.keyName)
+            .pipe(
+                mergeMap(res => [
+                    createKey.success({ keyId: res.data, keyName: a.payload.keyName }),
+                    setNewKeyName({ value: '' })
+                ]),
+                catchError(err => of(createKey.failure(err)))
             )
         )
     )

@@ -1,11 +1,19 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Button, Table, Spinner, Container } from 'react-bootstrap'
+import { Button, Table, Spinner, Container, Form, InputGroup, Row, Col } from 'react-bootstrap'
 
 import { MainLayout } from '../../common/main-layout'
 import { useMemoDispatch } from '../../hooks'
-import { fetchProjectDetail, fetchTranslations, clearCultureCodeSelection, setEditMode, saveTranslationValue } from './actions'
+import {
+    fetchProjectDetail,
+    fetchTranslations,
+    clearCultureCodeSelection,
+    setEditMode,
+    saveTranslationValue,
+    createKey,
+    setNewKeyName
+} from './actions'
 import {
     selectTranslationKeys,
     selectCultureCodes,
@@ -13,7 +21,8 @@ import {
     selectSelectedCultureCodes,
     selectTranslations,
     selectTranslationValue,
-    selectIsLoadingCultureCode
+    selectIsLoadingCultureCode,
+    selectNewKeyName
 } from './selectors'
 import { arrayShallowEqual } from '../../util'
 
@@ -28,13 +37,17 @@ export const ProjectDetail = () => {
     const projectName = useSelector(selectProjectName)
     const selectedCultureCodes = useSelector(selectSelectedCultureCodes, arrayShallowEqual)
     const translations = useSelector(selectTranslations)
+    const newKeyName = useSelector(selectNewKeyName)
+
 
     const fetchTranslationsCb = (code: string) => dispatch(fetchTranslations.request({ projectId, code }))
     const clearCultureCodeSelectionCb = (code: string) => dispatch(clearCultureCodeSelection({ code }))
     const setEditModeCb = (code: string, keyId: number, edit: boolean) => dispatch(setEditMode({ code, keyId, edit }))
     const saveTranslationCb = (code: string, keyId: number, value: string) => dispatch(saveTranslationValue.request({ code, keyId, value }))
+    const createKeyCb = (keyName: string) => dispatch(createKey.request({ projectId, keyName }))
+    const setNewKeyNameCb = (value: string) => dispatch(setNewKeyName({ value }))
 
-    React.useEffect(() => {
+    useEffect(() => {
         dispatch(fetchProjectDetail.request(Number(id)))
     }, [id, dispatch])
 
@@ -56,6 +69,25 @@ export const ProjectDetail = () => {
                     </Button>)}
         </Container>
         <Container fluid={true}>
+            <Row>
+                <Col xs={5}>
+                    <InputGroup className='mb-2 mt-2'>
+                        <Form.Control
+                            type='text'
+                            value={newKeyName || ''}
+                            onChange={(e: any) => setNewKeyNameCb(e.target.value)}
+                        />
+                        <InputGroup.Append>
+                            <Button
+                                onClick={() => newKeyName && createKeyCb(newKeyName)}
+                                disabled={!newKeyName}
+                            >
+                                New key +
+                            </Button>
+                        </InputGroup.Append>
+                    </InputGroup>
+                </Col>
+            </Row>
             <Table className='translation-table' bordered={true} responsive={true} striped={true}>
                 <thead>
                     <tr>
@@ -70,7 +102,7 @@ export const ProjectDetail = () => {
                         <td>{tk.name}</td>
                         {selectedCultureCodes.map(scc => {
                             const translationValue = selectTranslationValue(translations[scc], tk.id)
-                            return <td key={scc} onClick={() => !translationValue?.editMode && setEditModeCb(scc, tk.id, true)}>
+                            return <td key={`${scc}-${tk.id}`} onClick={() => !translationValue?.editMode && setEditModeCb(scc, tk.id, true)}>
                                 <TranslationValueField
                                     value={translationValue?.value}
                                     editMode={!!translationValue?.editMode}

@@ -37,3 +37,11 @@ export const saveTranslationValue = createAsyncAction(
     'SAVE_TRANSLATION_SUCCESS',
     'SAVE_TRANSLATION_FAILURE'
 )<{code: string, keyId: number, value: string}, {code: string, keyId: number, value: string}, AxiosError>()
+
+export const createKey = createAsyncAction(
+    'CREATE_KEY_REQUEST',
+    'CREATE_KEY_SUCCESS',
+    'CREATE_KEY_FAILURE'
+)<{projectId: number, keyName: string}, { keyId: number, keyName: string }, void>()
+
+export const setNewKeyName = createAction('SET_NEW_KEY_NAME')<{value: string}>()

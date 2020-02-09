@@ -15,5 +15,8 @@ export const makeRestClient = (axios: Axios) => ({
     saveTranslationValue: (code: string, keyId: number, value: string) =>
         axios.post(`/translations/${keyId}/values/${code}`, {
             value
-        })
+        }),
+
+    createKey: (projectId: number, key: string) =>
+        axios.post(`/translations`, { projectId, key })
 })

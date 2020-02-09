@@ -18,5 +18,7 @@ export const selectTranslationValue = (group: TranslationGroup | undefined, keyI
 export const selectIsLoadingCultureCode = (group: TranslationGroup | undefined) =>
     group?.loading
 
+export const selectNewKeyName = createSelector(selectFeature, a => a.detail?.newKeyName)
+
 export const selectSelectedCultureCodes = createSelector(selectFeature,
     a => Object.keys(a.translations).filter(k => !!a.translations[k]))

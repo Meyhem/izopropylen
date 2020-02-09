@@ -33,7 +33,7 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
     .handleAction(actions.fetchProjectDetail.failure,
         (s, a) => ({ ...s, loading: false, fetchProjectsError: a.payload }))
     .handleAction(actions.fetchProjectDetail.success,
-        (s, a) => ({ ...s, loading: false, error: undefined, detail: a.payload }))
+        (s, a) => ({ ...s, loading: false, error: undefined, detail: a.payload, translations: {} }))
 
     .handleAction(actions.clearCultureCodeSelection, (s, a) => ({
         ...s,
@@ -73,6 +73,9 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
     .handleAction(actions.setEditMode, (s, a) => produce(s, draft => {
         const group = draft.translations[a.payload.code]
         if (group) {
+            if (!group.translations[a.payload.keyId]) {
+                group.translations[a.payload.keyId] = {valueId: 0, value: ''}
+            }
             group.translations[a.payload.keyId].editMode = a.payload.edit
         }
     }))
@@ -81,5 +84,20 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
         const group = draft.translations[a.payload.code]
         if (group) {
             group.translations[a.payload.keyId].value = a.payload.value
+        }
+    }))
+
+    .handleAction(actions.setNewKeyName, (s, a) => produce(s, draft => {
+        if (draft.detail) {
+            draft.detail.newKeyName = a.payload.value
+        }
+    }))
+
+    .handleAction(actions.createKey.success, (s, a) => produce(s, draft => {
+        draft.detail?.keys.unshift({ id: a.payload.keyId, name: a.payload.keyName })
+        for (const cc of Object.keys(draft.translations)) {
+            if (draft.translations[cc]) {
+                draft.translations[cc]!.translations[a.payload.keyId] = { value: '', valueId: 0}
+            }
         }
     }))

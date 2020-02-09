@@ -40,7 +40,8 @@ namespace Izopropylen.Core.Services
             return await keyRepository
                 .Query()
                 .Where(k => k.ProjectId == projectId)
-                .SelectMany(k => k.Values.Select(v => v.CultureCode).Distinct())
+                .SelectMany(k => k.Values.Select(v => v.CultureCode))
+                .Distinct()
                 .ToListAsync();
         }
 
