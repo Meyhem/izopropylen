@@ -1,7 +1,17 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Button, Table, Spinner, Container, Form, InputGroup, Row, Col } from 'react-bootstrap'
+import {
+    Button,
+    Table,
+    Spinner,
+    Container,
+    Form,
+    InputGroup,
+    Row,
+    Col,
+    Dropdown
+} from 'react-bootstrap'
 
 import { MainLayout } from '../../common/main-layout'
 import { useMemoDispatch } from '../../hooks'
@@ -25,6 +35,7 @@ import {
     selectNewKeyName
 } from './selectors'
 import { arrayShallowEqual } from '../../util'
+import { cultures, getCultureCodes, getCultureName } from '../../cultures'
 
 import './project-detail.sass'
 
@@ -32,6 +43,8 @@ export const ProjectDetail = () => {
     const dispatch = useMemoDispatch()
     const { id } = useParams()
     const projectId = Number(id)
+    const cultureList = useMemo(getCultureCodes, [])
+
     const translationKeys = useSelector(selectTranslationKeys)
     const cultureCodes = useSelector(selectCultureCodes)
     const projectName = useSelector(selectProjectName)
@@ -56,17 +69,31 @@ export const ProjectDetail = () => {
             <h1>{projectName}</h1>
 
             {cultureCodes &&
-                cultureCodes.map(cc =>
-                    <Button
-                        disabled={selectIsLoadingCultureCode(translations[cc])}
-                        className='m-1'
-                        key={cc}
-                        value={cc}
-                        onClick={() => selectedCultureCodes.includes(cc) ? clearCultureCodeSelectionCb(cc) : fetchTranslationsCb(cc)}
-                        variant={selectedCultureCodes.includes(cc) ? 'primary' : 'light'}
-                    >
-                        {cc} {selectIsLoadingCultureCode(translations[cc]) && <Spinner animation='border' size='sm' />}
-                    </Button>)}
+                <>
+                    {cultureCodes.map(cc =>
+                        <Button
+                            disabled={selectIsLoadingCultureCode(translations[cc])}
+                            className='m-1'
+                            key={cc}
+                            value={cc}
+                            onClick={() => selectedCultureCodes.includes(cc) ? clearCultureCodeSelectionCb(cc) : fetchTranslationsCb(cc)}
+                            variant={selectedCultureCodes.includes(cc) ? 'primary' : 'light'}
+                        >
+                            {cc} {selectIsLoadingCultureCode(translations[cc]) && <Spinner animation='border' size='sm' />}
+                        </Button>
+                    )}
+                    <Dropdown className='d-inline'>
+                        <Dropdown.Toggle variant='success' id='dropdown-basic'>
+                            Add new language
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className='select-menu-limit'>
+                            {cultureList.map(cc =>
+                                <Dropdown.Item key={cc} as='button' onClick={() => {}}>
+                                    {getCultureName(cc)} ({cc})
+                                </Dropdown.Item>)}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </>}
         </Container>
         <Container fluid={true}>
             <Row>
