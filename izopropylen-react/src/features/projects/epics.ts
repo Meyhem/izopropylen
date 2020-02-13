@@ -3,7 +3,18 @@ import { isActionOf } from 'typesafe-actions'
 import { map, filter, switchMap, catchError, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 
-import { fetchProjects, createProject, toggleDialog, fetchProjectDetail, fetchTranslations, saveTranslationValue, setEditMode, createKey, setNewKeyName } from './actions'
+import {
+    fetchProjects,
+    createProject,
+    toggleDialog,
+    fetchProjectDetail,
+    fetchTranslations,
+    saveTranslationValue,
+    setEditMode,
+    createKey,
+    setNewKeyName,
+
+} from './actions'
 
 export const fetchProjects$: RootEpic = (action$, state$, services) =>
     action$.pipe(
@@ -50,9 +61,9 @@ export const fetchProjectDetail$: RootEpic = (action$, state$, services) =>
         )
     )
 
-function mapTranslationValues(values: any[]): { [k: number]: TranslationValue} {
+function mapTranslationValues(values: any[]): { [k: number]: TranslationValue } {
     return values.reduce((acc, v) => {
-        acc[v.translationKeyId] = { valueId: v.translationValueId, value: v.value}
+        acc[v.translationKeyId] = { valueId: v.translationValueId, value: v.value }
         return acc
     }, {})
 }

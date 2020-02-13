@@ -1,8 +1,9 @@
-import React from 'react'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { Dispatch } from 'redux'
 
-export const useMemoDispatch = () => {
-    const dispatch = useDispatch();
+export function useDispatchingCallback<T extends (...args: any[]) => void>(factory: (d: Dispatch) => T, deps: any[]) {
+    const dispatch = useDispatch()
 
-    return React.useCallback(dispatch, []);
+    return useCallback(factory(dispatch), [dispatch, ...deps])
 }

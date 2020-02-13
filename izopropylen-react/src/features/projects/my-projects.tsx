@@ -1,17 +1,16 @@
 import React, { useCallback } from 'react'
 import { ProjectMembership } from 'models'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Card, Spinner, Row, Col, Button, Alert } from 'react-bootstrap'
 
 import { selectMemberships, selectIsLoading, selectFetchProjectsErrorMessage, selectCreateProjectsErrorMessage, selectIsDialogOpen } from './selectors'
 import { MainLayout } from '../../common/main-layout'
 import { fetchProjects, createProject, toggleDialog } from './actions'
-import { useMemoDispatch } from '../../hooks'
 import { Link } from 'react-router-dom'
 import { CreateProjectModal } from './create-project-modal'
 
 export const MyProjects = () => {
-    const dispatch = useMemoDispatch()
+    const dispatch = useDispatch()
 
     const memberships = useSelector(selectMemberships)
     const loading = useSelector(selectIsLoading)

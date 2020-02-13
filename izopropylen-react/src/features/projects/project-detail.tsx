@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import {
     Button,
@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap'
 
 import { MainLayout } from '../../common/main-layout'
-import { useMemoDispatch } from '../../hooks'
+import { useDispatchingCallback } from '../../hooks'
 import {
     fetchProjectDetail,
     fetchTranslations,
@@ -22,7 +22,8 @@ import {
     setEditMode,
     saveTranslationValue,
     createKey,
-    setNewKeyName
+    setNewKeyName,
+    addNewCultureCode
 } from './actions'
 import {
     selectTranslationKeys,
@@ -32,15 +33,16 @@ import {
     selectTranslations,
     selectTranslationValue,
     selectIsLoadingCultureCode,
-    selectNewKeyName
+    selectNewKeyName,
+    selectIsLoadingAnyCode
 } from './selectors'
 import { arrayShallowEqual } from '../../util'
-import { cultures, getCultureCodes, getCultureName } from '../../cultures'
+import { getCultureCodes, getCultureName } from '../../cultures'
 
 import './project-detail.sass'
 
 export const ProjectDetail = () => {
-    const dispatch = useMemoDispatch()
+    const dispatch = useDispatch()
     const { id } = useParams()
     const projectId = Number(id)
     const cultureList = useMemo(getCultureCodes, [])
@@ -49,16 +51,17 @@ export const ProjectDetail = () => {
     const cultureCodes = useSelector(selectCultureCodes)
     const projectName = useSelector(selectProjectName)
     const selectedCultureCodes = useSelector(selectSelectedCultureCodes, arrayShallowEqual)
+    const isLoadingAnyCode = useSelector(selectIsLoadingAnyCode)
     const translations = useSelector(selectTranslations)
     const newKeyName = useSelector(selectNewKeyName)
 
-
-    const fetchTranslationsCb = (code: string) => dispatch(fetchTranslations.request({ projectId, code }))
-    const clearCultureCodeSelectionCb = (code: string) => dispatch(clearCultureCodeSelection({ code }))
-    const setEditModeCb = (code: string, keyId: number, edit: boolean) => dispatch(setEditMode({ code, keyId, edit }))
-    const saveTranslationCb = (code: string, keyId: number, value: string) => dispatch(saveTranslationValue.request({ code, keyId, value }))
-    const createKeyCb = (keyName: string) => dispatch(createKey.request({ projectId, keyName }))
-    const setNewKeyNameCb = (value: string) => dispatch(setNewKeyName({ value }))
+    const fetchTranslationsCb = useDispatchingCallback(d => (code: string) => d(fetchTranslations.request({ projectId, code })), [])
+    const clearCultureCodeSelectionCb = useDispatchingCallback(d => (code: string) => d(clearCultureCodeSelection({ code })), [])
+    const setEditModeCb = useDispatchingCallback(d => (code: string, keyId: number, edit: boolean) => d(setEditMode({ code, keyId, edit })), [])
+    const saveTranslationCb = useDispatchingCallback(d => (code: string, keyId: number, value: string) => d(saveTranslationValue.request({ code, keyId, value })), [])
+    const createKeyCb = useDispatchingCallback(d => (keyName: string) => d(createKey.request({ projectId, keyName })), [])
+    const setNewKeyNameCb = useDispatchingCallback(d => (value: string) => d(setNewKeyName({ value })), [])
+    const addNewCultureCodeCb = useDispatchingCallback(d => (code: string) => d(addNewCultureCode({code})), [])
 
     useEffect(() => {
         dispatch(fetchProjectDetail.request(Number(id)))
@@ -83,12 +86,16 @@ export const ProjectDetail = () => {
                         </Button>
                     )}
                     <Dropdown className='d-inline'>
-                        <Dropdown.Toggle variant='success' id='dropdown-basic'>
+                        <Dropdown.Toggle
+                            variant='success'
+                            id='dropdown-basic'
+                            disabled={isLoadingAnyCode}
+                        >
                             Add new language
                         </Dropdown.Toggle>
                         <Dropdown.Menu className='select-menu-limit'>
                             {cultureList.map(cc =>
-                                <Dropdown.Item key={cc} as='button' onClick={() => {}}>
+                                <Dropdown.Item key={cc} as='button' onClick={() => addNewCultureCodeCb(cc)}>
                                     {getCultureName(cc)} ({cc})
                                 </Dropdown.Item>)}
                         </Dropdown.Menu>

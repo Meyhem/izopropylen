@@ -101,3 +101,12 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
             }
         }
     }))
+
+    .handleAction(actions.addNewCultureCode, (s, a) => produce(s, draft => {
+        draft.detail?.cultureCodes.push(a.payload.code)
+        draft.translations[a.payload.code] = {
+            cultureCode: a.payload.code,
+            translations: {},
+            loading: false
+        }
+    }))
