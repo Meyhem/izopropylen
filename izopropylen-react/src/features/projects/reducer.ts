@@ -7,7 +7,14 @@ import { createReducer, ActionType } from 'typesafe-actions'
 
 const init: Projects = {
     loading: false,
-    translations: {}
+    translations: {},
+    detail: {
+        showImportDialog: false,
+        importRunning: false,
+        importedKeys: 0,
+        importTotalKeys: 0,
+        newKeyName: ''
+    }
 }
 
 export default createReducer<Projects, ActionType<typeof actions>>(init)
@@ -33,7 +40,13 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
     .handleAction(actions.fetchProjectDetail.failure,
         (s, a) => ({ ...s, loading: false, fetchProjectsError: a.payload }))
     .handleAction(actions.fetchProjectDetail.success,
-        (s, a) => ({ ...s, loading: false, error: undefined, detail: a.payload, translations: {} }))
+        (s, a) => produce(s, draft => {
+            draft.loading = false
+            draft.detail.id = a.payload.id
+            draft.detail.name = a.payload.name
+            draft.detail.cultureCodes = a.payload.cultureCodes
+            draft.detail.keys = a.payload.keys
+        }))
 
     .handleAction(actions.clearCultureCodeSelection, (s, a) => ({
         ...s,
@@ -94,7 +107,7 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
     }))
 
     .handleAction(actions.createKey.success, (s, a) => produce(s, draft => {
-        draft.detail?.keys.unshift({ id: a.payload.keyId, name: a.payload.keyName })
+        draft.detail.keys?.unshift({ id: a.payload.keyId, name: a.payload.keyName })
         for (const cc of Object.keys(draft.translations)) {
             if (draft.translations[cc]) {
                 draft.translations[cc]!.translations[a.payload.keyId] = { value: '', valueId: 0}
@@ -103,7 +116,7 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
     }))
 
     .handleAction(actions.addNewCultureCode, (s, a) => produce(s, draft => {
-        draft.detail?.cultureCodes.push(a.payload.code)
+        draft.detail.cultureCodes?.push(a.payload.code)
         draft.translations[a.payload.code] = {
             cultureCode: a.payload.code,
             translations: {},
@@ -112,7 +125,11 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
     }))
 
     .handleAction(actions.deleteCultureCode.success, (s, a) => produce(s, draft => {
-        draft.detail?.cultureCodes.splice(draft.detail.cultureCodes.indexOf(a.payload.code), 1)
+        draft.detail.cultureCodes?.splice(draft.detail.cultureCodes?.indexOf(a.payload.code), 1)
 
         draft.translations[a.payload.code] = undefined
+    }))
+
+    .handleAction(actions.showImportDialog, (s, a) => produce(s, draft => {
+        draft.detail.showImportDialog = a.payload.show
     }))

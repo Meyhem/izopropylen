@@ -20,7 +20,7 @@ export const fetchProjectDetail = createAsyncAction(
     'FETCH_PROJECT_DETAIL_REQUEST',
     'FETCH_PROJECT_DETAIL_SUCCESS',
     'FETCH_PROJECT_DETAIL_FAILURE'
-)<number, ProjectDetail, AxiosError>()
+)<number, Partial<ProjectDetail>, AxiosError>()
 
 export const clearCultureCodeSelection = createAction('CLEAR_CULTURE_CODE_SELECTION')<{code: string}>()
 
@@ -53,3 +53,12 @@ export const deleteCultureCode = createAsyncAction(
     'DELETE_CULTURE_CODE_SUCCESS',
     'DELETE_CULTURE_CODE_ERROR'
 )<{projectId: number, code: string}, {code: string}, void>()
+
+export const showImportDialog = createAction('SHOW_IMPORT_DIALOG')<{show: boolean}>()
+
+export const importKeys = createAsyncAction(
+    'IMPORT_KEYS_REQUEST',
+    'IMPORT_KEYS_SUCCESS',
+    'IMPORT_KEYS_ERROR',
+    'IMPORT_KEYS_CANCEL'
+)<void, void, void>()

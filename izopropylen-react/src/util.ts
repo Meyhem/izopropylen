@@ -42,6 +42,10 @@ export const isInvalid = (meta: { touched?: boolean, error?: any }) => meta.touc
 
 export const isValid = (meta: { touched?: boolean, error?: any }) => meta.touched && !meta.error
 
-
 export const arrayShallowEqual = <T>(left: T[], right: T[]) =>
     right.length === left.length && left.every((v, i) => right[i] === v)
+
+export const fun = {
+    identity: <T>(x: T) => x,
+    noop: (...args: any[]) => undefined
+}

@@ -19,10 +19,15 @@ declare module 'models' {
     }
 
     export interface ProjectDetail {
-        id: number
-        name: string
-        keys: TranslationKey[]
-        cultureCodes: string[]
+        id?: number
+        name?: string
+        keys?: TranslationKey[]
+        cultureCodes?: string[]
+
+        showImportDialog: boolean
+        importRunning: boolean
+        importedKeys: number
+        importTotalKeys: number
 
         newKeyName: string
     }
@@ -44,7 +49,7 @@ declare module 'models' {
 
     export interface Projects {
         memberships?: ProjectMembership[]
-        detail?: ProjectDetail
+        detail: ProjectDetail
         translations: { [code: string]: TranslationGroup | undefined }
 
         loading: boolean

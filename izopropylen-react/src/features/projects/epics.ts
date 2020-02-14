@@ -14,6 +14,7 @@ import {
     createKey,
     setNewKeyName,
     deleteCultureCode,
+    importKeys,
 
 } from './actions'
 import { AxiosError } from 'axios'
@@ -42,13 +43,12 @@ export const createProject$: RootEpic = (action$, state$, services) =>
         )
     )
 
-function mapDetailResponse(r: any): ProjectDetail {
+function mapDetailResponse(r: any): Partial<ProjectDetail> {
     return {
         id: r.id,
         name: r.name,
         cultureCodes: r.cultureCodes.sort((a: string, b: string) => a.localeCompare(b)),
         keys: r.translationKeys.map((tk: any) => ({ id: tk.translationKeyId, name: tk.key })),
-        newKeyName: ''
     }
 }
 
@@ -136,4 +136,9 @@ export const deleteCultureCode$: RootEpic = (action$, state$, services) =>
                 ]))
             )
         )
+    )
+
+export const importKeys$: RootEpic = (action$, state$, services) =>
+    action$.pipe(
+        filter(isActionOf(importKeys.request))
     )

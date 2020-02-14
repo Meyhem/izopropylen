@@ -42,6 +42,7 @@ import { arrayShallowEqual } from '../../util'
 import { getCultureCodes, getCultureName } from '../../cultures'
 
 import './project-detail.sass'
+import { ImportDialog } from './import-dialog'
 
 export const ProjectDetail = () => {
     const dispatch = useDispatch()
@@ -83,6 +84,11 @@ export const ProjectDetail = () => {
                 deleteCultureCodeCb(code)
                 setDeleteCodeCandidate(undefined)
             }}
+        />}
+        {<ImportDialog
+            show={true}
+            onConfirm={() => {}}
+            onCancel={() => {}}
         />}
         <Container>
             <h1>{projectName}</h1>
