@@ -117,5 +117,18 @@ namespace Izopropylen.Api.Controllers
 
             return mapper.Map<IEnumerable<TranslationValueModel>>(values);
         }
+
+        [HttpDelete("{projectId}/{cultureCode}")]
+        public async Task
+            DeleteCultureTranslations(int projectId, string cultureCode)
+        {
+            await securityService.ThrowIfNoAccessToProjectWithMinimalRole(
+               HttpContext.User.GetId(),
+               projectId,
+               ProjectAccountRole.Editor
+            );
+
+            await translationService.DeleteProjectCulture(projectId, cultureCode);
+        }
     }
 }

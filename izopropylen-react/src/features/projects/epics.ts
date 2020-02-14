@@ -1,7 +1,7 @@
 import { RootEpic, ProjectRole, ProjectDetail, TranslationValue } from 'models'
 import { isActionOf } from 'typesafe-actions'
 import { map, filter, switchMap, catchError, mergeMap } from 'rxjs/operators'
-import { of } from 'rxjs'
+import { of, from } from 'rxjs'
 
 import {
     fetchProjects,
@@ -13,8 +13,11 @@ import {
     setEditMode,
     createKey,
     setNewKeyName,
+    deleteCultureCode,
 
 } from './actions'
+import { AxiosError } from 'axios'
+import { addToasterFromAxiosError } from '../app/actions'
 
 export const fetchProjects$: RootEpic = (action$, state$, services) =>
     action$.pipe(
@@ -99,7 +102,10 @@ export const saveTranslationValue$: RootEpic = (action$, state$, services) =>
                         edit: false
                     })
                 ]),
-                catchError(err => of(saveTranslationValue.failure(err)))
+                catchError((err: AxiosError) => from([
+                    saveTranslationValue.failure(err),
+                    addToasterFromAxiosError(err)
+                ]))
             )
         )
     )
@@ -114,6 +120,20 @@ export const createKey$: RootEpic = (action$, state$, services) =>
                     setNewKeyName({ value: '' })
                 ]),
                 catchError(err => of(createKey.failure(err)))
+            )
+        )
+    )
+
+export const deleteCultureCode$: RootEpic = (action$, state$, services) =>
+    action$.pipe(
+        filter(isActionOf(deleteCultureCode.request)),
+        switchMap(a => services.rest.deleteCultureCode(a.payload.projectId, a.payload.code)
+            .pipe(
+                map(res => deleteCultureCode.success({code: a.payload.code})),
+                catchError(err => from([
+                    deleteCultureCode.failure(),
+                    addToasterFromAxiosError(err)
+                ]))
             )
         )
     )

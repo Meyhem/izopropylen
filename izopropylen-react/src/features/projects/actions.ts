@@ -47,3 +47,9 @@ export const createKey = createAsyncAction(
 export const setNewKeyName = createAction('SET_NEW_KEY_NAME')<{value: string}>()
 
 export const addNewCultureCode = createAction('ADD_NEW_CULTURE_CODE')<{code: string}>()
+
+export const deleteCultureCode = createAsyncAction(
+    'DELETE_CULTURE_CODE_REQUEST',
+    'DELETE_CULTURE_CODE_SUCCESS',
+    'DELETE_CULTURE_CODE_ERROR'
+)<{projectId: number, code: string}, {code: string}, void>()

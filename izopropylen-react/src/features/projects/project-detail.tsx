@@ -14,6 +14,7 @@ import {
 } from 'react-bootstrap'
 
 import { MainLayout } from '../../common/main-layout'
+import { ConfirmationDialog } from '../../common/confirmation-dialog'
 import { useDispatchingCallback } from '../../hooks'
 import {
     fetchProjectDetail,
@@ -23,7 +24,8 @@ import {
     saveTranslationValue,
     createKey,
     setNewKeyName,
-    addNewCultureCode
+    addNewCultureCode,
+    deleteCultureCode
 } from './actions'
 import {
     selectTranslationKeys,
@@ -46,6 +48,7 @@ export const ProjectDetail = () => {
     const { id } = useParams()
     const projectId = Number(id)
     const cultureList = useMemo(getCultureCodes, [])
+    const [deleteCodeCandidate, setDeleteCodeCandidate] = useState<string | undefined>(undefined)
 
     const translationKeys = useSelector(selectTranslationKeys)
     const cultureCodes = useSelector(selectCultureCodes)
@@ -55,19 +58,32 @@ export const ProjectDetail = () => {
     const translations = useSelector(selectTranslations)
     const newKeyName = useSelector(selectNewKeyName)
 
-    const fetchTranslationsCb = useDispatchingCallback(d => (code: string) => d(fetchTranslations.request({ projectId, code })), [])
-    const clearCultureCodeSelectionCb = useDispatchingCallback(d => (code: string) => d(clearCultureCodeSelection({ code })), [])
-    const setEditModeCb = useDispatchingCallback(d => (code: string, keyId: number, edit: boolean) => d(setEditMode({ code, keyId, edit })), [])
-    const saveTranslationCb = useDispatchingCallback(d => (code: string, keyId: number, value: string) => d(saveTranslationValue.request({ code, keyId, value })), [])
-    const createKeyCb = useDispatchingCallback(d => (keyName: string) => d(createKey.request({ projectId, keyName })), [])
-    const setNewKeyNameCb = useDispatchingCallback(d => (value: string) => d(setNewKeyName({ value })), [])
-    const addNewCultureCodeCb = useDispatchingCallback(d => (code: string) => d(addNewCultureCode({code})), [])
+    const fetchTranslationsCb = useDispatchingCallback(d => (code: string) => d(fetchTranslations.request({ projectId, code })))
+    const clearCultureCodeSelectionCb = useDispatchingCallback(d => (code: string) => d(clearCultureCodeSelection({ code })))
+    const setEditModeCb = useDispatchingCallback(d => (code: string, keyId: number, edit: boolean) => d(setEditMode({ code, keyId, edit })))
+    const saveTranslationCb = useDispatchingCallback(d => (code: string, keyId: number, value: string) => d(saveTranslationValue.request({ code, keyId, value })))
+    const createKeyCb = useDispatchingCallback(d => (keyName: string) => d(createKey.request({ projectId, keyName })))
+    const setNewKeyNameCb = useDispatchingCallback(d => (value: string) => d(setNewKeyName({ value })))
+    const addNewCultureCodeCb = useDispatchingCallback(d => (code: string) => d(addNewCultureCode({code})))
+    const deleteCultureCodeCb = useDispatchingCallback(d => (code: string) => d(deleteCultureCode.request({code, projectId})))
 
     useEffect(() => {
         dispatch(fetchProjectDetail.request(Number(id)))
     }, [id, dispatch])
 
     return <MainLayout withContainer={false}>
+        {deleteCodeCandidate && <ConfirmationDialog
+            show={true}
+            data={deleteCodeCandidate}
+            title={`Delete culture code ${deleteCodeCandidate}`}
+            text={`Are you sure you want to delete '${deleteCodeCandidate}' ? All translated texts will be LOST FOREVER!`}
+            variant='danger'
+            onCancel={() => setDeleteCodeCandidate(undefined)}
+            onConfirm={(code: string) => {
+                deleteCultureCodeCb(code)
+                setDeleteCodeCandidate(undefined)
+            }}
+        />}
         <Container>
             <h1>{projectName}</h1>
 
@@ -128,6 +144,12 @@ export const ProjectDetail = () => {
                         <th>Key</th>
                         {selectedCultureCodes.map(scc => <th key={scc}>
                             {scc} {selectIsLoadingCultureCode(translations[scc]) && <Spinner animation='border' size='sm' />}
+                            <span
+                                className='delete-culture-code-button'
+                                onClick={() => setDeleteCodeCandidate(scc)}
+                            >
+                                &#x2297;
+                            </span>
                         </th>)}
                     </tr>
                 </thead>

@@ -120,5 +120,15 @@ namespace Izopropylen.Core.Services
                 })
                 .ToListAsync();
         }
+
+        public async Task DeleteProjectCulture(int projectId, string cultureCode)
+        {
+            var deleteCandidates = await valueRepository.Query()
+                .Where(v => v.CultureCode == cultureCode &&
+                    v.TranslationKey.ProjectId == projectId)
+                .ToListAsync();
+
+            await valueRepository.DeleteMany(deleteCandidates);
+        }
     }
 }

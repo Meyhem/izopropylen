@@ -110,3 +110,9 @@ export default createReducer<Projects, ActionType<typeof actions>>(init)
             loading: false
         }
     }))
+
+    .handleAction(actions.deleteCultureCode.success, (s, a) => produce(s, draft => {
+        draft.detail?.cultureCodes.splice(draft.detail.cultureCodes.indexOf(a.payload.code), 1)
+
+        draft.translations[a.payload.code] = undefined
+    }))

@@ -9,6 +9,7 @@ namespace Izopropylen.Core.Interfaces
     public interface ITranslationService
     {
         Task<int> CreateKey(int projectId, string key);
+        Task DeleteProjectCulture(int projectId, string cultureCode);
         Task<IEnumerable<string>> GetProjectCultureCodes(int projectId);
         Task<IEnumerable<TranslationKeyDto>> GetProjectKeys(int projectId);
         Task<IEnumerable<TranslationValueDto>> GetValues(int translationKeyId);
